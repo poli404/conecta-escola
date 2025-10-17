@@ -1,0 +1,5 @@
+# variáveis e ambiente virtuais
+venv/
+.env
+# cache e arquivos temporários
+__pycache__
