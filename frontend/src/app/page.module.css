@@ -1,0 +1,39 @@
+.container {
+    max-width: 800px;
+    padding: 20px;
+    margin: 0 auto;
+    align-content: center;
+    text-align: center;
+}
+
+.subtitle {
+    color: #450b9c;
+    text-align: center;
+    font-weight: normal;
+}
+
+.subtopic {
+    color: #5800c3;
+    margin-top: 30px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.paragraph {
+    text-align: justify;
+    line-height: 1.6;
+    margin-top: 0px;
+    font-size: 10pt;
+    margin-bottom: 20px;
+}
+
+.button {
+    background-color: #520f91;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: none;
+}
