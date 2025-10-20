@@ -4,13 +4,13 @@ export default function Page() {
   return (
     <main>
       <div className={styles.container}>
-        <p>Seja bem-vindo!</p>
+        <h1>Seja bem-vindo ao Conecta Escola!</h1>
         <form className={styles.loginForm}>
-          <input className={styles.field} type="text" placeholder="Usuário"/>
-          <input className={styles.field} type="password" placeholder="Senha"/>
+          <input className={styles.field} id="user" type="text" placeholder="Usuário"/>
+          <input className={styles.field} id="password" type="password" placeholder="Senha"/>
           <button type="submit">Login</button>
+          <a href="">Esqueceu sua senha?</a>
         </form>
-        <a>Esqueceu sua senha?</a>
       </div>
     </main>
   );

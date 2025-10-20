@@ -14,8 +14,11 @@ export default function Home() {
         <p className={styles.paragraph}>Saiba sempre em primeira mão sobre o desempenho acadêmico e a frequência escolar do seu dependente!</p>
         <h4 className={styles.subtopic}>Professores</h4>
         <p className={styles.paragraph}>Obtenha métricas precisas sobre o que o desempenho dos seus alunos diz sobre você!</p>
-        <br></br>
-        <Link className={styles.button} href="/escola">Cadastre já sua escola!</Link>
+        <div className={styles.buttonContainer}>
+          <Link className={styles.fakeButton} href="/escola/cadastro">Cadastre já sua escola!</Link>
+          <p>ou</p>
+          <Link className={styles.fakeButton} href="/login">Entre no Sistema</Link>
+        </div>
       </div>
     </main>
   );

@@ -6,6 +6,13 @@
     text-align: center;
 }
 
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
 .subtitle {
     color: #450b9c;
     text-align: center;
@@ -27,7 +34,7 @@
     margin-bottom: 20px;
 }
 
-.button {
+.fakeButton {
     background-color: #520f91;
     color: white;
     padding: 10px 20px;
@@ -36,4 +43,5 @@
     cursor: pointer;
     font-weight: 500;
     text-decoration: none;
+    align-content: center;
 }
