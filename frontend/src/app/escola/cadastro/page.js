@@ -11,8 +11,6 @@ export default function Home() {
             <input className={styles.field} type="text" id="nome" name="nome" required/>
             <label htmlFor="endereco">Endereço:</label>
             <input className={styles.field} type="text" id="endereco" name="endereco" required/>
-            <label htmlFor="email">E-Mail:</label>
-            <input className={styles.field} type="email" id="email" name="email" placeholder="escola@escola.com" required/>
             <label htmlFor="cnpj">CNPJ:</label>
             <input className={styles.field} type="text" id="cnpj" name="cnpj" placeholder="XX.XXX.XXX/XXXX-XX" required/>
             <label htmlFor="dominio">Domínio de E-Mail:</label>

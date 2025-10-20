@@ -1,0 +1,48 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 30px;
+}
+
+.forms{
+    display: flex;
+    flex-direction: column;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 20px 20px 0px 25px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 2 0px 4px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    font-size: small;
+}
+
+.linha{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.field{
+    display: block;
+    margin-bottom: 10px;
+    padding: 8px;
+    width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font: inherit;
+}
+
+.mini {
+    width: 120px;
+}
+
+.title {
+    color: #520f91;
+    font-weight: 600;
+    margin-top: 0;
+}
