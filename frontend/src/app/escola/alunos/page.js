@@ -1,10 +1,11 @@
 import { MenuEscola } from "@/components/MenuEscola";
 import Link from "next/link";
 import styles from "./page.module.css";
+import { CorpoTabela, BarraPesquisa } from "@/components/Tabela";
 
 export default function Home() {
   //const alunos = getAllAlunos();
-  const alunos = [{ id: 1, nome: "João Silva", anoEscolar: 3 }, { id: 2, nome: "Maria Oliveira", anoEscolar: 2 }]; // Dados simulados
+  const alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }]; // Dados simulados
 
   return (
     <main>
@@ -13,21 +14,14 @@ export default function Home() {
         <Link className={styles.fakeButton} href="/escola/alunos/cadastro">Cadastrar Novo Aluno</Link>
         <table className={styles.table}>
           <thead>
+            <BarraPesquisa />
             <tr>
-              <th>Matrícula</th>
-              <th>Nome do Aluno</th>
-              <th>Ano Escolar</th>
+              <th className={styles.title}>Matrícula</th>
+              <th className={styles.title}>Nome do Aluno</th>
+              <th></th>
             </tr>
           </thead>
-          <tbody>
-              {alunos.map((aluno) => (
-                <tr key={aluno.id}>
-                  <td>{aluno.id}</td>
-                  <td>{aluno.nome}</td>
-                  <td>{aluno.anoEscolar}</td>
-                </tr>
-              ))}
-          </tbody>
+          <CorpoTabela dados={alunos} tipo={"alunos"}/>
         </table>
       </div>
     </main>

@@ -26,4 +26,10 @@
     padding: 20px;
     text-align: left;
     width: 80%;
+    font-size: small;
+}
+
+.title {
+    font-weight: 500;
+    color:blueviolet;
 }

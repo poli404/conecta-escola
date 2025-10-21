@@ -20,7 +20,7 @@ export default function Home() {
       email: '',
       formacao: '',
       disciplinas: [],
-      senha: Math.random().toString(36).slice(-10)
+      senha: Math.random().toString(36).slice(-20)
     });
   
     const handleSubmit = async (e) => {
