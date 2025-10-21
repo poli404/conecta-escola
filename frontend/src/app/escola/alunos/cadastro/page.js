@@ -1,7 +1,47 @@
+'use client';
+import { useState } from 'react';
 import { MenuEscola } from "@/components/MenuEscola";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const [formData, setFormData] = useState({
+      nome: '',
+      cpf: '',
+      rg: '',
+      genero: '',
+      cor: '',
+      telefone: '',
+      endereco: '',
+      cep: '',
+      uf: '',
+      nascimento: '',
+      nacionalidade: '',
+      naturalidade: '',
+      tipoSangue: '',
+      deficiencia: '',
+      alergia: '',
+      anoEscolar: '',
+      situacaoAnterior: '',
+      senha: Math.random().toString(36).slice(-10)
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      //const resultado = await cadastrarEscola(formData);
+      alert('Escola cadastrada com sucesso!');
+    } catch (erro) {
+      alert('Erro ao cadastrar escola');
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
   return (
     <main>
       <MenuEscola/>
@@ -11,7 +51,7 @@ export default function Home() {
           <div>
             <h3 className={styles.title}>Informações Pessoais</h3>
             <label htmlFor="nome">Nome:</label>
-            <input className={styles.field} type="text" id="nome" name="nome" required/>
+            <input className={styles.field} type="text" id="nome" name="nome" value={formData.nome} onChange={handleChange} required/>
             <div className={styles.linha}>
               <label htmlFor="cpf">CPF:</label>
               <input className={`${styles.field} ${styles.mini}`} type="text" id="cpf" name="cpf" placeholder="123.456.789-10" required/>
@@ -19,8 +59,8 @@ export default function Home() {
               <input className={`${styles.field} ${styles.mini}`} type="text" id="rg" name="rg" placeholder="12.345.678-9" required/>
             </div>
             <div className={styles.linha}>
-              <label htmlFor="sexo">Sexo:</label>
-              <select id="sexo" className={`${styles.field} ${styles.mini}`} name="sexo" defaultValue="feminino" required>
+              <label htmlFor="genero">Gênero:</label>
+              <select id="genero" className={`${styles.field} ${styles.mini}`} name="genero" defaultValue="feminino" required>
                 <option value="feminino">Feminino</option>
                 <option value="masculino">Masculino</option>
                 <option value="outro">Outro</option>

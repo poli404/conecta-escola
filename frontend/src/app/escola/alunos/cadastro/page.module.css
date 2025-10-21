@@ -9,7 +9,7 @@
 .forms{
     display: flex;
     flex-direction: column;
-    max-width: 450px;
+    max-width: 80%;
     margin: 0 auto;
     padding: 20px 20px 0px 25px;
     background-color: white;
@@ -31,14 +31,14 @@
     display: block;
     margin-bottom: 10px;
     padding: 8px;
-    width: 400px;
+    width: 100%;
     border: 1px solid #ccc;
     border-radius: 4px;
     font: inherit;
 }
 
 .mini {
-    width: 120px;
+    min-width: 20%;
 }
 
 .title {

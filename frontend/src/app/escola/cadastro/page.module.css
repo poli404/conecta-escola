@@ -28,3 +28,9 @@
     border-radius: 4px;
     font: inherit;
 }
+
+.title {
+    color: #520f91;
+    font-weight: 600;
+    margin-top: 0;
+}
