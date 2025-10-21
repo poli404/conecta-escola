@@ -1,8 +1,9 @@
 from dotenv import load_dotenv
 import os
 from database.enums import *
+import unicodedata
 from sqlalchemy import create_engine, Column, Date, Enum, Float, ForeignKey, Integer, String
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 # cria conexão e base do banco
 load_dotenv()  # carrega .env se existir
@@ -21,6 +22,9 @@ class Escola(Base):
     dominio = Column("dominio", String(100), nullable=False, unique=True)
     email = Column("email", String(255), unique=True)
     senha = Column("senha", String(255), nullable=False)
+
+    # relacionamento com professores
+    professores = relationship("Professor", back_populates="escola")
 
     def __init__(self, nome, cnpj, endereco, dominio, senha):
         self.nome = nome
@@ -60,26 +64,35 @@ class Pessoa(Base):
         self.senha = senha
         self.tipo = TipoPessoa.PESSOA
 
-    __mapper_args__ = {
-        "polymorphic_on": tipo,
-        # "polymorphic_identity": TipoPessoa.PESSOA,
-        "with_polymorphic": "*"  # permite retornar objetos das subclasses
-    }
+    __mapper_args__ = {"polymorphic_on": tipo, "with_polymorphic": "*"}  # permite retornar objetos das subclasses
+
 
 class Professor(Pessoa):
     __tablename__ = "professores"
     cpf = Column("cpf", String(11), ForeignKey("pessoas.cpf"), primary_key=True)
-    email = Column("email", String(255), nullable=False, unique=True)
+    emailPessoal = Column("email_pessoal", String(255), nullable=False)
+    emailEscolar = Column("email_escolar", String(255), unique=True)
     graduacao = Column("graduacao", String(255), nullable=False)
     cargaHoraria = Column("carga_horaria", Float, nullable=False)
 
-    def __init__(self, nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha, email, graduacao, cargaHoraria):
+    # relacionamento com escola
+    idEscola = Column("id_escola", Integer, ForeignKey("escolas.id"), nullable=False)
+    escola = relationship("Escola", back_populates="professores")
+
+    def __init__(self, nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha, emailPessoal, graduacao, cargaHoraria, escola):
         super().__init__(nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha)
-        self.email = email  # pensar melhor, talvez o ideal seria o sistema gerar para ele fazer login (?)
+        self.emailPessoal = emailPessoal
+        self.emailEscolar = self.gerar_email(nome, escola.dominio)
         self.graduacao = graduacao
         self.cargaHoraria = cargaHoraria
 
-    __mapper_args__ = { "polymorphic_identity": TipoPessoa.PROFESSOR }
+    @staticmethod
+    def gerar_email(nome, dominio):
+        nome_sem_acento = ''.join(c for c in unicodedata.normalize('NFD', nome) if unicodedata.category(c) != 'Mn')
+        nome_formatado = nome_sem_acento.lower().replace(" ", "")
+        return f"{nome_formatado}@{dominio}.br"
+
+    __mapper_args__ = {"polymorphic_identity": TipoPessoa.PROFESSOR}
 
 
 Base.metadata.create_all(bind=db)

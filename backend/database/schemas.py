@@ -8,7 +8,6 @@ class EscolaSchema(BaseModel):
     cnpj: str
     endereco: str
     dominio: str
-    # email: Optional[str] = None
     senha: str
 
     model_config = {"from_attributes": True}
@@ -30,8 +29,9 @@ class PessoaSchema(BaseModel):
 
     model_config = {"from_attributes": True}
 
+
 class ProfessorSchema(PessoaSchema):
-    email: str
+    emailPessoal: str
     graduacao: str
     cargaHoraria: float
 
