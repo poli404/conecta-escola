@@ -7,7 +7,7 @@ export default function Home() {
     <main>
       <MenuEscola/>
       <div className={styles.container}>
-        <Link className={styles.fakeButton} href="/escola/alunos/cadastro">Cadastrar Novo Aluno</Link>
+        <Link className={styles.fakeButton} href="/escola/professores/cadastro">Cadastrar Novo Professor</Link>
       </div>
     </main>
   );
