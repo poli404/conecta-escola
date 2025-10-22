@@ -85,6 +85,8 @@ class Professor(Pessoa):
         self.emailEscolar = self.gerar_email(nome, escola.dominio)
         self.graduacao = graduacao
         self.cargaHoraria = cargaHoraria
+        self.escola = escola
+        self.tipo = TipoPessoa.PROFESSOR
 
     @staticmethod
     def gerar_email(nome, dominio):

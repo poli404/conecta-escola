@@ -6,6 +6,7 @@ app = FastAPI()
 # roteadores de rotas
 from routers.login_routers import login_router
 from routers.escola_routes import escola_router
+from routers.professor_routes import professor_router
 
 origins = [
 	"http://localhost:3000",
@@ -23,3 +24,4 @@ app.add_middleware(
 # rotas
 app.include_router(login_router)
 app.include_router(escola_router)
+app.include_router(professor_router)
