@@ -1,4 +1,5 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
+#from pydantic import EmailStr
 from typing import Optional
 from datetime import date
 from database.enums import *
@@ -18,7 +19,8 @@ class EscolaResponseSchema(BaseModel):
     cnpj: str
     endereco: str
     dominio: str
-    email: EmailStr 
+    #email: EmailStr 
+    email: str
 
     model_config = {"from_attributes": True}
 
@@ -64,7 +66,8 @@ class ProfessorResponseSchema(PessoaResponseSchema):
     emailPessoal: str
     graduacao: str
     cargaHoraria: float
-    emailEscolar: EmailStr
+    #emailEscolar: EmailStr
+    emailEscolar: str
     escola: EscolaResponseSchema
 
     model_config = {"from_attributes": True}

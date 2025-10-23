@@ -1,18 +1,7 @@
 'use client';
 import styles from "./page.module.css";
 import { useState } from 'react';
-
-async function cadastrarEscola(dadosEscola) {
-  const response = await fetch('http://localhost:8000/escola/cadastro', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(dadosEscola)
-  });
-  console.log('Response status:', response.json());
-  return response.json();
-}
+import { cadastrarEscola } from '@/services/escolaService';
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -55,7 +44,7 @@ export default function Home() {
             <label htmlFor="cnpj">CNPJ:</label>
             <input className={styles.field} type="text" id="cnpj" name="cnpj" placeholder="XX.XXX.XXX/XXXX-XX" value={formData.cnpj} onChange={handleChange} required/>
             <label htmlFor="dominio">Domínio de E-Mail:</label>
-            <input className={styles.field} type="text" id="dominio" name="dominio" placeholder="@nomeDaEscola.com" value={formData.dominio} onChange={handleChange} required/>
+            <input className={styles.field} type="text" id="dominio" name="dominio" placeholder="nomeDaEscola.com" value={formData.dominio} onChange={handleChange} required/>
             <h3 className={styles.title}>Definição de Senha</h3>
             <label htmlFor="senha">Defina uma nova senha:</label>
             <input className={styles.field} type="password" id="senha" name="senha" value={formData.senha} onChange={handleChange} required/>

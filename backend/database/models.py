@@ -62,7 +62,7 @@ class Pessoa(Base):
         self.dataNasc = dataNasc
         self.genero = genero
         self.senha = senha
-        self.tipo = TipoPessoa.PESSOA
+        #self.tipo = TipoPessoa.PESSOA
 
     __mapper_args__ = {"polymorphic_on": tipo, "with_polymorphic": "*"}  # permite retornar objetos das subclasses
 
@@ -85,8 +85,8 @@ class Professor(Pessoa):
         self.emailEscolar = self.gerar_email(nome, escola.dominio)
         self.graduacao = graduacao
         self.cargaHoraria = cargaHoraria
-        self.escola = escola
-        self.tipo = TipoPessoa.PROFESSOR
+        #self.escola = escola
+        #self.tipo = TipoPessoa.PROFESSOR
 
     @staticmethod
     def gerar_email(nome, dominio):

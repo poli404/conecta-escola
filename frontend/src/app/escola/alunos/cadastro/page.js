@@ -13,7 +13,7 @@ export default function Home() {
       telefone: '',
       endereco: '',
       cep: '',
-      uf: '',
+      uf: 'parana',
       nascimento: '',
       nacionalidade: '',
       naturalidade: '',
@@ -82,7 +82,7 @@ export default function Home() {
               <label htmlFor="cep">CEP:</label>
               <input className={`${styles.field} ${styles.mini}`} type="text" id="cep" name="cep" placeholder="12345-678" required/>
               <label htmlFor="uf">UF:</label>
-              <select id="uf" className={`${styles.field} ${styles.mini}`} name="uf" required>
+              <select id="uf" className={`${styles.field} ${styles.mini}`} value={formData.uf} name="uf" required>
                 <option value="acre">AC</option>
                 <option value="alagoas">AL</option>
                 <option value="amapa">AP</option>
@@ -120,6 +120,8 @@ export default function Home() {
             <input className={styles.field} type="text" id="nacionalidade" name="nacionalidade" placeholder="Brasileira(o)" required/>
             <label htmlFor="naturalidade">Naturalidade:</label>
             <input className={styles.field} type="text" id="naturalidade" name="naturalidade" placeholder="Brasil" required/>
+            <label htmlFor="foto">Foto do Aluno:</label>
+            <input className={styles.field} type="file" id="foto" name="foto" required/>
             <h3 className={styles.title}>Informações de Saúde</h3>
             <label htmlFor="tipoSangue">Tipo Sanguíneo:</label>
             <select id="tipoSangue" className={styles.field} name="tipoSangue" required>
