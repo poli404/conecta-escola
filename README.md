@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Conecta Escola
 
-## Getting Started
+Trabalho desenvolvido para a disciplina Construção de Software (9793/01), no ano letivo de 2025, ministrada pelo professor Renato Balancieri.
 
-First, run the development server:
+## Contexto
+O site Conecta Escola será desenvolvido com o objetivo de auxiliar o contato entre a coordenação, os professores, os alunos e os responsáveis para que tenham total ciência sobre as notas, as faltas e o rendimento escolar de seus dependentes.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Backend
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Tecnologias utilizadas
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- FastAPI: framework para criar a API, com rotas, validações e documentação automática;
+- uvicorn: servidor que executa a API FastAPI;
+- sqlalchemy: ORM para mapear classes Python em tabelas MySQL;
+- pymysql: driver para conectar Python ao MySQL;
+- pydantic: validação e serialização de dados nos schemas;
+- python-dotenv: carregamento de variáveis de ambiente de arquivos .env;
+- passlib/bcrypt: hash seguro de senhas.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Execução
 
-## Learn More
+- Criar e ativar ambiente virtual:
 
-To learn more about Next.js, take a look at the following resources:
+    `python -m venv venv`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    Windows: `venv\Scripts\activate`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    Linux: `source venv/bin/activate`
 
-## Deploy on Vercel
+- Instalar dependências:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    `pip install -r requirements.txt`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Rodar servidor:
+
+    `uvicorn main:app --reload`
+
+## Frontend
+
+### Tecnologias utilizadas
+
+- Next.js: framework React para desenvolvimento frontend
+
+### Execução
+
+    `npm run dev`
