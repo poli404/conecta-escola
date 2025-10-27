@@ -5,10 +5,10 @@ import eye from "../../../public/eye_icon.svg";
 import lupa from "../../../public/search_icon.svg";
 
 //lógica de pesquisa no banco de dados
-export const BarraPesquisa = () => {
+export const BarraPesquisa = ({ col }) => {
     return (
         <tr>
-            <th colSpan="2">
+            <th colSpan={col}>
                 <input className={styles.field} type="text" placeholder="Pesquisar"/>
             </th>
             <th className={styles.center}>
@@ -21,7 +21,46 @@ export const BarraPesquisa = () => {
 }
 
 export const CorpoTabela = ({ dados, tipo }) => {
-  return (
+    if (tipo == "turmas") {
+        return (
+        <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.center}>{dado.id}</td>
+                <td className={styles.left}>
+                    <Link className={styles.text} href={`escola/${tipo}/${dado.id}`}>{dado.anoEscolar}</Link>
+                </td>
+                <td className={styles.center}>{dado.turma}</td>
+                <td className={styles.center}>
+                    <Link className={styles.detalhes} href={`escola/${tipo}/${dado.id}`}>
+                        <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
+                    </Link>
+                </td>
+            </tr>
+            ))}
+        </tbody>
+        );
+    } else if (tipo == 'responsaveis') {
+        return (
+        <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.left}>{dado.nome}</td>
+                <td className={styles.left}>
+                    <Link className={styles.text} href={`escola/${tipo}/${dado.id}`}>{dado.aluno}</Link>
+                </td>
+                <td className={styles.left}>{dado.contato}</td>
+                <td className={styles.center}>
+                    <Link className={styles.detalhes} href={`escola/${tipo}/${dado.id}`}>
+                        <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
+                    </Link>
+                </td>
+            </tr>
+            ))}
+        </tbody>
+        );
+    }
+    return (
     <tbody>
         {dados.map((dado) => (
         <tr key={dado.id}>

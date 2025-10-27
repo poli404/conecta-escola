@@ -15,7 +15,7 @@ export default function Home() {
 
         <table className={styles.table}>
           <thead>
-            <BarraPesquisa />
+            <BarraPesquisa col="2"/>
             <tr>
               <th className={styles.title}>Identificação</th>
               <th className={styles.title}>Nome do Docente</th>
