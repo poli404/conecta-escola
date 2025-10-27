@@ -4,7 +4,7 @@ async function cadastrarEscola(dadosEscola) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: dadosEscola
+    body: JSON.stringify(dadosEscola)
   });
   console.log('Response status:', response.json());
   return response.json();

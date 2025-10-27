@@ -8,7 +8,6 @@ from database.models import Escola
 
 escola_router = APIRouter(prefix="/escola", tags=["escola"])
 
-
 @escola_router.get("/", response_model=list[EscolaResponseSchema])
 def listar_escolas(db: Session = Depends(get_db)):
     escolas = db.query(Escola).all()
@@ -27,3 +26,10 @@ def cadastrar_escola(escola: EscolaCreateSchema, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(nova_escola)
     return nova_escola
+
+"""@escola_router.get("/professores", response_model=list[ProfessorResponseSchema])
+def listar_professores(db: Session = Depends(get_db)):
+    professores = db.query(Professor).options(joinedload(Professor.escola)).all()
+    if not professores:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhum professor cadastrado.")
+    return professores"""

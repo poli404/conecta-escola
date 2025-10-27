@@ -8,8 +8,8 @@ export default function Home() {
       nome: '',
       cpf: '',
       rg: '',
-      genero: '',
-      cor: '',
+      genero: 'feminino',
+      cor: 'parda',
       telefone: '',
       endereco: '',
       cep: '',
@@ -60,18 +60,18 @@ export default function Home() {
             </div>
             <div className={styles.linha}>
               <label htmlFor="genero">Gênero:</label>
-              <select id="genero" className={`${styles.field} ${styles.mini}`} name="genero" defaultValue="feminino" required>
+              <select id="genero" className={`${styles.field} ${styles.mini}`} name="genero" value={formData.genero} onChange={handleChange} required>
                 <option value="feminino">Feminino</option>
                 <option value="masculino">Masculino</option>
                 <option value="outro">Outro</option>
               </select>
               <label htmlFor="cor">Cor/Raça:</label>
-              <select id="cor" className={`${styles.field} ${styles.mini}`} name="cor" required>
-                <option value="parda">Parda</option>
-                <option value="branca">Branca</option>
-                <option value="preta">Preta</option>
-                <option value="indigena">Indígena</option>
+              <select id="cor" className={`${styles.field} ${styles.mini}`} name="cor" value={formData.cor} onChange={handleChange} required>
                 <option value="amarela">Amarela</option>
+                <option value="indigena">Indígena</option>
+                <option value="branca">Branca</option>
+                <option value="parda">Parda</option>
+                <option value="preta">Preta</option>
               </select>
             </div>
             <label htmlFor="telefone">Telefone:</label>
@@ -82,7 +82,7 @@ export default function Home() {
               <label htmlFor="cep">CEP:</label>
               <input className={`${styles.field} ${styles.mini}`} type="text" id="cep" name="cep" placeholder="12345-678" required/>
               <label htmlFor="uf">UF:</label>
-              <select id="uf" className={`${styles.field} ${styles.mini}`} value={formData.uf} name="uf" required>
+              <select id="uf" className={`${styles.field} ${styles.mini}`} value={formData.uf} onChange={handleChange} name="uf" required>
                 <option value="acre">AC</option>
                 <option value="alagoas">AL</option>
                 <option value="amapa">AP</option>

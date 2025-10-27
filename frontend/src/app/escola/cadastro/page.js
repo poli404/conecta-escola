@@ -1,7 +1,18 @@
 'use client';
 import styles from "./page.module.css";
 import { useState } from 'react';
-import { cadastrarEscola } from '@/services/escolaService';
+
+async function cadastrarEscola(dadosEscola) {
+  const response = await fetch('http://localhost:8000/escola/cadastro', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(dadosEscola)
+  });
+
+  return response;
+}
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -14,13 +25,16 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
       e.target.confirmacao.value != formData.senha && alert('As senhas não coincidem!');
       const resultado = await cadastrarEscola(formData);
-      alert('Escola cadastrada com sucesso!');
-    } catch (erro) {
-      alert('Erro ao cadastrar escola');
-    }
+      if (resultado.status == 201) {
+        alert('Escola cadastrada com sucesso!');
+      } else if (resultado.status == 409) {
+        alert('Escola já cadastrada');
+      } else { // 500 etc
+        alert('Erro ao cadastrar escola');
+      }
+      
   };
 
   const handleChange = (e) => {

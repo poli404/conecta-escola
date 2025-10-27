@@ -39,7 +39,7 @@ export default function Page() {
           <input className={styles.field} id="email" type="text" placeholder="E-Mail" required/>
           <input className={styles.field} id="password" type="password" placeholder="Senha" required/>
           <button type="submit">Login</button>
-          <a href="">Esqueceu sua senha?</a>
+          <a href="/escola">Esqueceu sua senha?</a>
         </form>
       </div>
     </main>

@@ -17,7 +17,7 @@ class Escola(Base):
     __tablename__ = "escolas"
     id = Column("id", Integer, primary_key=True, autoincrement=True)
     nome = Column("nome", String(255), nullable=False)
-    cnpj = Column("cnpj", String(14), nullable=False, unique=True)
+    cnpj = Column("cnpj", String(24), nullable=False, unique=True)
     endereco = Column("endereco", String(255), nullable=False)
     dominio = Column("dominio", String(100), nullable=False, unique=True)
     email = Column("email", String(255), unique=True)
