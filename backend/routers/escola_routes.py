@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from security import get_password_hash
+
 from database.schemas import EscolaCreateSchema, EscolaResponseSchema
 from database.dependencies import get_db
 from database.models import Escola
@@ -21,7 +23,9 @@ def cadastrar_escola(escola: EscolaCreateSchema, db: Session = Depends(get_db)):
     if existente:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Escola já cadastrada.")
 
-    nova_escola = Escola(nome=escola.nome, cnpj=escola.cnpj, endereco=escola.endereco, dominio=escola.dominio, senha=escola.senha)
+    hashed_password = get_password_hash(existente.senha)
+
+    nova_escola = Escola(nome=escola.nome, cnpj=escola.cnpj, endereco=escola.endereco, dominio=escola.dominio, senha=hashed_password)
     db.add(nova_escola)
     db.commit()
     db.refresh(nova_escola)
