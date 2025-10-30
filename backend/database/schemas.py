@@ -59,6 +59,7 @@ class ProfessorCreateSchema(PessoaCreateSchema):
     emailPessoal: str
     graduacao: str
     cargaHoraria: float
+    id_escola: int
 
     model_config = {"from_attributes": True}
 

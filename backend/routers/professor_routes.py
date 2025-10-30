@@ -16,9 +16,9 @@ def listar_professores(db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhum professor cadastrado.")
     return professores
 
-@professor_router.post("/cadastro/{id_escola}", response_model=ProfessorResponseSchema, status_code=status.HTTP_201_CREATED)
-def cadastrar_professor(id_escola: int, professor: ProfessorCreateSchema, db: Session = Depends(get_db)):
-    escola = db.query(Escola).filter(Escola.id == id_escola).first()
+@professor_router.post("/cadastro", response_model=ProfessorResponseSchema, status_code=status.HTTP_201_CREATED)
+def cadastrar_professor(professor: ProfessorCreateSchema, db: Session = Depends(get_db)):
+    escola = db.query(Escola).filter(Escola.id == professor.id_escola).first()
     if not escola:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Escola não encontrada.")
     existente = db.query(Professor).filter(Professor.cpf == professor.cpf).first()
