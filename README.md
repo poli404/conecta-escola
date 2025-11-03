@@ -43,4 +43,10 @@ O site Conecta Escola será desenvolvido com o objetivo de auxiliar o contato en
 
 ### Execução
 
+- Instalar as dependências:
+
+    `npm install next react react-dom`
+
+- Rodar frontend:
+
     `npm run dev`

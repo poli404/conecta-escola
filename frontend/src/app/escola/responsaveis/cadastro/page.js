@@ -3,14 +3,6 @@ import { useState } from 'react';
 import { MenuEscola } from "@/components/MenuEscola";
 import styles from "./page.module.css";
 
-async function cadastrarAluno(dados) {
-  const resposta = fetch(`https://localhost:8000/aluno/cadastro`, {
-    headers: "application/json",
-    body: JSON.stringify(dados)
-  });
-
-}
-
 export default function Home() {
   const [formData, setFormData] = useState({
       nome: '',
@@ -23,13 +15,9 @@ export default function Home() {
       cep: '',
       uf: 'parana',
       nascimento: '',
-      nacionalidade: '',
-      naturalidade: '',
-      tipoSangue: '',
-      deficiencia: '',
-      alergia: '',
-      anoEscolar: '',
-      situacaoAnterior: '',
+      aluno: '',
+      email: '',
+      estadoCivil: '',
       senha: Math.random().toString(36).slice(-10)
   });
 
@@ -53,9 +41,9 @@ export default function Home() {
   return (
     <main>
       <MenuEscola/>
-            <div className={styles.container}>
-        <h1>Cadastro de Novo Aluno</h1>
-        <form className={styles.forms}>
+        <div className={styles.container}>
+        <h1>Cadastro de Novo Responsável</h1>
+        <form className={styles.forms} onSubmit={handleSubmit}>
           <div>
             <h3 className={styles.title}>Informações Pessoais</h3>
             <label htmlFor="nome">Nome:</label>
@@ -82,8 +70,6 @@ export default function Home() {
                 <option value="preta">Preta</option>
               </select>
             </div>
-            <label htmlFor="telefone">Telefone do Responsável:</label>
-            <input className={styles.field} type="tel" id="telefone" name="telefone" placeholder="(99) 99999-9999" required/>
             <label htmlFor="endereco">Endereço:</label>
             <input className={styles.field} type="text" id="endereco" name="endereco" required/>
             <div className={styles.linha}>
@@ -120,48 +106,23 @@ export default function Home() {
                 <option value="tocantins">TO</option>
               </select>
             </div>
+            <label htmlFor="estadoCivil">Estado Civil:</label>
+            <select className={styles.field} name="estadoCivil">
+              <option>Casada(o)</option>
+              <option>Divorciada(o)</option>
+              <option>Solteira(o)</option>
+              <option>Viúva(o)</option>
+            </select>
             <label htmlFor="nascimento">Data de Nascimento:</label>
             <input className={styles.field} type="date" id="nascimento" name="nascimento" required/>
-            <label htmlFor="certidaoNascimento">Certidão de Nascimento:</label>
-            <input className={styles.field} type="file" id="certidaoNascimento" name="certidaoNascimento" required/>
-            <label htmlFor="nacionalidade">Nacionalidade:</label>
-            <input className={styles.field} type="text" id="nacionalidade" name="nacionalidade" placeholder="Brasileira(o)" required/>
-            <label htmlFor="naturalidade">Naturalidade:</label>
-            <input className={styles.field} type="text" id="naturalidade" name="naturalidade" placeholder="Brasil" required/>
-            <label htmlFor="foto">Foto do Aluno:</label>
-            <input className={styles.field} type="file" id="foto" name="foto"/>
-            <h3 className={styles.title}>Informações de Saúde</h3>
-            <label htmlFor="tipoSangue">Tipo Sanguíneo:</label>
-            <select id="tipoSangue" className={styles.field} name="tipoSangue" required>
-              <option value="A+">A+</option>
-              <option value="A-">A-</option>
-              <option value="B+">B+</option>
-              <option value="B-">B-</option>
-              <option value="AB+">AB+</option>
-              <option value="AB-">AB-</option>
-              <option value="O+">O+</option>
-              <option value="O-">O-</option>
-            </select>
-            <label htmlFor="vacinacao">Carteira de Vacinação:</label>
-            <input className={styles.field} type="file" id="vacinacao" name="vacinacao" required/>
-            <label htmlFor="deficiencia">Possui alguma deficiência?</label>
-            <input className={styles.field} type="text" id="deficiencia" name="deficiencia" placeholder="N/A" required/>
-            <label htmlFor="alergia">Possui alergias?</label>
-            <input className={styles.field} type="text" id="alergia" name="alergia" placeholder="N/A" required/>
-            <h3 className={styles.title}>Informações Escolares</h3>
             <div className={styles.linha}>
-              <label>Ano Escolar:</label>
-              <input className={`${styles.field} ${styles.mini}`} type="number" id="anoEscolar" name="anoEscolar"/>
-              <label>Situação no ano anterior:</label>
-              <select id="situacaoAnterior" className={`${styles.field} ${styles.mini}`} name="situacaoAnterior" required>
-                <option value="aprovado">Aprovado</option>
-                <option value="reprovado">Reprovado</option>
-              </select>
-            </div><br></br>
-            <label htmlFor="historicoEscolar">Histórico Escolar:</label>
-            <input className={styles.field} type="file" id="historicoEscolar" name="historicoEscolar" min="1" max="3" required/>
+              <label htmlFor="email">Email:</label>
+              <input className={`${styles.field} ${styles.mini}`} type="email" id="email" name="email" placeholder="nome@gmail.com" required/>
+              <label htmlFor="telefone">Telefone:</label>
+              <input className={`${styles.field} ${styles.mini}`} type="tel" id="telefone" name="telefone" placeholder="(99) 99999-9999" required/>
+            </div>
           </div>
-          <button type="submit">Cadastrar Aluno</button>
+          <button type="submit">Cadastrar Resposável</button>
         </form>
       </div>
     </main>

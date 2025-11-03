@@ -30,9 +30,9 @@ export default function Home() {
       if (resultado.status == 201) {
         alert('Escola cadastrada com sucesso!');
       } else if (resultado.status == 409) {
-        alert('Escola já cadastrada');
+        alert('Escola já cadastrada!');
       } else { // 500 etc
-        alert('Erro ao cadastrar escola');
+        alert('Erro ao cadastrar escola!');
       }
       
   };

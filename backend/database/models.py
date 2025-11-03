@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 from database.enums import *
 import unicodedata
-from sqlalchemy import create_engine, Column, Date, Enum, Float, ForeignKey, Integer, String
+from sqlalchemy import create_engine, Boolean, Column, Date, Enum, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 # cria conexão e base do banco
@@ -40,15 +40,15 @@ class Pessoa(Base):
     nome = Column("nome", String(255), nullable=False)
     cpf = Column("cpf", String(11), primary_key=True)
     rg = Column("rg", String(15), nullable=False)
-    corRaca = Column("corRaca", Enum(CorRaca), nullable=False)
+    corRaca = Column("cor_raca", Enum(CorRaca), nullable=False)
     endereco = Column("endereco", String(255), nullable=False)
     cep = Column("cep", String(8), nullable=False)
     uf = Column("uf", Enum(Uf), nullable=False)
-    dataNasc = Column("dataNasc", Date, nullable=False)
+    dataNasc = Column("data_nasc", Date, nullable=False)
     genero = Column("genero", Enum(Genero), nullable=False)
     telefone = Column("telefone", String(11), nullable=False)
     senha = Column("senha", String(255), nullable=False)
-    tipo = Column("tipo", Enum(TipoPessoa), nullable=False, default=TipoPessoa.PESSOA)
+    tipo = Column("tipo", Enum(TipoPessoa), nullable=False) #, default=TipoPessoa.PESSOA)
 
     def __init__(self, nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha):
         self.nome = nome
@@ -95,6 +95,45 @@ class Professor(Pessoa):
         return f"{nome_formatado}@{dominio}.br"
 
     __mapper_args__ = {"polymorphic_identity": TipoPessoa.PROFESSOR}
+
+
+class Aluno(Pessoa):
+    __tablename__ = "alunos"
+    cpf = Column("cpf", String(11), ForeignKey("pessoas.cpf"), primary_key=True)
+    nacionalidade = Column("nacionalidade", String(255), nullable=False)
+    naturalidade = Column("naturalidade", String(255), nullable=False)
+    deficiencia = Column("deficiencia", String(255))
+    tipoSanguineo = Column("tipo_sanguineo", Enum(TipoSanguineo), nullable=False)
+    alergia = Column("alergia", String(255))
+    situacaoAnoAnterior = Column("situacao_ano_anterior", Boolean, nullable=False)
+    certidaoNascimento = Column("certidao_nascimento", String(255), nullable=False)
+    carteiraVacinacao = Column("carteira_vacinacao", String(255), nullable=False)
+    anoEscolar = Column("ano_escolar", Integer, nullable=False)
+    historicoEscolar = Column("historico_escolar", String(255), nullable=True)
+
+    # relacionamento com responsável
+    idResponsavel = Column("id_responsavel", String(11), ForeignKey("responsaveis.cpf"), nullable=True)
+    responsavel = relationship("Responsavel", back_populates="alunos")
+
+    __mapper_args__ = {"polymorphic_identity": TipoPessoa.ALUNO}
+
+
+class Responsavel(Pessoa):
+    __tablename__ = "responsaveis"
+    cpf = Column("cpf", String(11), ForeignKey("pessoas.cpf"), primary_key=True)
+    emailPessoal = Column("email_pessoal", String(255), nullable=False)
+    estadoCivil = Column("estado_civil", Enum(EstadoCivil), nullable=False)
+
+    # relacionamento com aluno
+    alunos = relationship("Aluno", back_populates="responsavel")
+
+    def __init__(self, nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha, emailPessoal, estadoCivil, aluno):
+        super().__init__(nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha)
+        self.emailPessoal = emailPessoal
+        self.estadoCivil = estadoCivil
+        self.alunos.append(aluno)
+
+    __mapper_args__ = {"polymorphic_identity": TipoPessoa.RESPONSAVEL}
 
 
 Base.metadata.create_all(bind=db)
