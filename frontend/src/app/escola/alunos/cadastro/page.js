@@ -3,6 +3,14 @@ import { useState } from 'react';
 import { MenuEscola } from "@/components/MenuEscola";
 import styles from "./page.module.css";
 
+async function cadastrarAluno(dados) {
+  const resposta = fetch(`https://localhost:8000/aluno/cadastro`, {
+    headers: "application/json",
+    body: JSON.stringify(dados)
+  });
+
+}
+
 export default function Home() {
   const [formData, setFormData] = useState({
       nome: '',
@@ -74,7 +82,7 @@ export default function Home() {
                 <option value="preta">Preta</option>
               </select>
             </div>
-            <label htmlFor="telefone">Telefone:</label>
+            <label htmlFor="telefone">Telefone do Responsável:</label>
             <input className={styles.field} type="tel" id="telefone" name="telefone" placeholder="(99) 99999-9999" required/>
             <label htmlFor="endereco">Endereço:</label>
             <input className={styles.field} type="text" id="endereco" name="endereco" required/>
@@ -121,7 +129,7 @@ export default function Home() {
             <label htmlFor="naturalidade">Naturalidade:</label>
             <input className={styles.field} type="text" id="naturalidade" name="naturalidade" placeholder="Brasil" required/>
             <label htmlFor="foto">Foto do Aluno:</label>
-            <input className={styles.field} type="file" id="foto" name="foto" required/>
+            <input className={styles.field} type="file" id="foto" name="foto"/>
             <h3 className={styles.title}>Informações de Saúde</h3>
             <label htmlFor="tipoSangue">Tipo Sanguíneo:</label>
             <select id="tipoSangue" className={styles.field} name="tipoSangue" required>

@@ -2,6 +2,23 @@
 import { useState } from "react";
 import styles from "./page.module.css";
 
+async function verificarUsuario(dadosLogin) {
+  const response = await fetch('http://localhost:8000/login', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+  });
+
+  if (response.status === 200) {
+    console.log('usuário reconhecido');
+  } else {
+    alert('Usuário ou senha incorretos!');
+  }
+
+}
+
 export default function Page() {
   const [formData, setFormData] = useState({
     email: "",
@@ -17,18 +34,9 @@ export default function Page() {
       password: e.target.password.value
     });
 
-    //contato com o backend para autenticar o usuário
-    try {
-      const response = await fetch('http://localhost:8000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
-    } catch (error) {
-      alert('Erro ao fazer login!');
-    }
+    sessionStorage.setItem('id', formData.email);
+
+    await verificarUsuario(formData);
   }
 
   return (

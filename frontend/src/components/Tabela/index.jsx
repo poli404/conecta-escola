@@ -28,11 +28,11 @@ export const CorpoTabela = ({ dados, tipo }) => {
             <tr key={dado.id}>
                 <td className={styles.center}>{dado.id}</td>
                 <td className={styles.left}>
-                    <Link className={styles.text} href={`escola/${tipo}/${dado.id}`}>{dado.anoEscolar}</Link>
+                    <Link className={styles.text} href={`${tipo}?${dado.id}`}>{dado.anoEscolar}</Link>
                 </td>
                 <td className={styles.center}>{dado.turma}</td>
                 <td className={styles.center}>
-                    <Link className={styles.detalhes} href={`escola/${tipo}/${dado.id}`}>
+                    <Link className={styles.detalhes} href={`${tipo}?id=${dado.id}`}>
                         <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
                     </Link>
                 </td>
@@ -47,11 +47,11 @@ export const CorpoTabela = ({ dados, tipo }) => {
             <tr key={dado.id}>
                 <td className={styles.left}>{dado.nome}</td>
                 <td className={styles.left}>
-                    <Link className={styles.text} href={`escola/${tipo}/${dado.id}`}>{dado.aluno}</Link>
+                    <Link className={styles.text} href={`${tipo}/perfil?${dado.id}`}>{dado.aluno}</Link>
                 </td>
                 <td className={styles.left}>{dado.contato}</td>
                 <td className={styles.center}>
-                    <Link className={styles.detalhes} href={`escola/${tipo}/${dado.id}`}>
+                    <Link className={styles.detalhes} href={`${tipo}/perfil?${dado.id}`}>
                         <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
                     </Link>
                 </td>
@@ -66,10 +66,10 @@ export const CorpoTabela = ({ dados, tipo }) => {
         <tr key={dado.id}>
             <td className={styles.center}>{dado.id}</td>
             <td className={styles.left}>
-                <Link className={styles.text} href={`escola/${tipo}/${dado.id}`}>{dado.nome}</Link>
+                <Link className={styles.text} href={`${tipo}/perfil?${dado.id}`}>{dado.nome}</Link>
             </td>
             <td className={styles.center}>
-                <Link className={styles.detalhes} href={`escola/${tipo}/${dado.id}`}>
+                <Link className={styles.detalhes} href={`${tipo}/perfil?${dado.id}`}>
                     <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
                 </Link>
             </td>
