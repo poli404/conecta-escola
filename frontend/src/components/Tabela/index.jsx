@@ -20,8 +20,27 @@ export const BarraPesquisa = ({ col }) => {
     );
 }
 
-export const CorpoTabela = ({ dados, tipo }) => {
-    if (tipo == "turmas") {
+export const CorpoTabela = ({ dados, tipo, usuario='escola' }) => {
+    if (usuario ==='professor') {
+        if (tipo == 'disciplinas') {
+       return (
+        <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.center}>{dado.id}</td>
+                <td className={styles.left}>
+                    <Link className={styles.text} href={`${tipo}?${dado.id}`}>{dado.nome}</Link>
+                </td>
+                <td className={styles.center}>
+                    <Link className={styles.detalhes} href={`${tipo}/turmas?id=${dado.id}`}>
+                        <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
+                    </Link>
+                </td>
+            </tr>
+            ))}
+        </tbody>
+        );    
+    }else if (tipo == "turmas") {
         return (
         <tbody>
             {dados.map((dado) => (
@@ -32,7 +51,60 @@ export const CorpoTabela = ({ dados, tipo }) => {
                 </td>
                 <td className={styles.center}>{dado.turma}</td>
                 <td className={styles.center}>
-                    <Link className={styles.detalhes} href={`${tipo}?id=${dado.id}`}>
+                    <Link className={styles.detalhes} href={`${tipo}/detalhes?id=${dado.id}`}>
+                        <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
+                    </Link>
+                </td>
+            </tr>
+            ))}
+        </tbody>
+        );
+    } else if (tipo == 'detalhes'){
+        return(
+             <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.center}>{dado.id}</td>
+                <td className={styles.left}>
+                    <Link className={styles.text} href={`${tipo}?${dado.id}`}>{dado.nome}</Link>
+                </td>
+                <td className={styles.center}>
+                    <Link className={styles.detalhes} href={`${tipo}/notas?id=${dado.id}`}>
+                        <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
+                    </Link>
+                </td>
+            </tr>
+            ))}
+        </tbody>
+        );
+    } else if (tipo == 'notas'){
+        return(
+             <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.center}>{dado.idAluno}</td>
+                <td className={styles.center}>{dado.data}</td>
+                <td className={`${styles.center} ${styles.destaque}`}>
+                    <Link className={styles.destaque} href={`${tipo}?${dado.id}`}>{dado.nota}</Link>
+                </td>
+            </tr>
+            ))}
+        </tbody>
+        );
+    }
+    } else {
+            if (tipo == "turmas") {
+        return (
+        <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.center}>{dado.id}</td>
+                <td className={styles.left}>
+                    <Link className={styles.text} href={`${tipo}?${dado.id}`}>{dado.anoEscolar}</Link>
+                </td>
+                <td className={styles.center}>{dado.turma}</td>
+                <td className={styles.center}>
+                    <Link className={styles.detalhes} href={`${tipo}/detalhes?id=${dado.id}`}>
                         <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
                     </Link>
                 </td>
@@ -60,21 +132,22 @@ export const CorpoTabela = ({ dados, tipo }) => {
         </tbody>
         );
     }
-    return (
-    <tbody>
-        {dados.map((dado) => (
-        <tr key={dado.id}>
-            <td className={styles.center}>{dado.id}</td>
-            <td className={styles.left}>
-                <Link className={styles.text} href={`${tipo}/perfil?${dado.id}`}>{dado.nome}</Link>
-            </td>
-            <td className={styles.center}>
-                <Link className={styles.detalhes} href={`${tipo}/perfil?${dado.id}`}>
-                    <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
-                </Link>
-            </td>
-        </tr>
-        ))}
-    </tbody>
-    );
+        return (
+        <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.center}>{dado.id}</td>
+                <td className={styles.left}>
+                    <Link className={styles.text} href={`${tipo}/perfil?${dado.id}`}>{dado.nome}</Link>
+                </td>
+                <td className={styles.center}>
+                    <Link className={styles.detalhes} href={`${tipo}/perfil?${dado.id}`}>
+                        <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
+                    </Link>
+                </td>
+            </tr>
+            ))}
+        </tbody>
+        );
+    }
 }
