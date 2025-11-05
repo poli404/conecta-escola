@@ -1,4 +1,5 @@
 'use client';
+import { useRef } from "react";
 import styles from "./page.module.css";
 import { useState } from 'react';
 
@@ -15,16 +16,26 @@ async function cadastrarEscola(dadosEscola) {
 }
 
 export default function Home() {
+  const alunosRef = useRef();
   //const alunos = getAllAlunos();
   const alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }];
 
   const [formData, setFormData] = useState({
     anoEscolar: '',
-    turma: ''
+    turma: '',
+    alunos: []
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (alunosRef.current) {
+      const selected = alunosRef.current.selectedOptions;
+
+      for (let i = 0; i < selected.length; i++) {
+        formData.alunos.append(i);
+      }
+    }
     //const resultado = await cadastrarEscola(formData);
     if (resultado.status == 201) {
       alert('Escola cadastrada com sucesso!');
@@ -39,9 +50,11 @@ export default function Home() {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name] : e.target.value
     });
   };
+
+  console.log(formData);
 
   return (
     <main>
@@ -55,9 +68,9 @@ export default function Home() {
             <label htmlFor="turma">Turma:</label>
             <input className={styles.field} type="text" id="turma" name="turma" placeholder="A" value={formData.turma} onChange={handleChange} required/>
             <label htmlFor="alunos">Adicione alunos à turma:</label>
-            <select className={styles.field} name="alunos" multiple>
+            <select className={styles.field} name="alunos" ref={alunosRef} multiple>
               {alunos.map(
-                (e) => (<option name={e.id}>{e.nome}</option>)
+                (e) => (<option key={e.id} name={e.id}>{e.nome}</option>)
               )}
             </select>
           </div>

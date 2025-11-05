@@ -36,3 +36,9 @@
     text-align: left;
     padding-left: 5px;
 }
+
+.destaque {
+    text-decoration: underline;
+    color: violet;
+    font-weight: bold;
+}
