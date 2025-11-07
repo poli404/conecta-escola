@@ -105,13 +105,45 @@ class AlunoResponseSchema(PessoaResponseSchema):
 class ResponsavelCreateSchema(PessoaCreateSchema):
     emailPessoal: str
     estadoCivil: EstadoCivil
-    idAluno: str # cpf
+    id_aluno: str # cpf
 
     model_config = {"from_attributes": True}
 
 class ResponsavelResponseSchema(PessoaResponseSchema):
     emailPessoal: str
     estadoCivil: EstadoCivil
-    alunos: list[AlunoResponseSchema]  # alunos: list["AlunoResponseSchema"]
+    alunos: list[AlunoResponseSchema]
+
+    model_config = {"from_attributes": True}
+
+
+class DisciplinaCreateSchema(BaseModel):
+    descricao: str
+    id_professor: str  # cpf (FK)
+
+    model_config = {"from_attributes": True}
+
+class DisciplinaResponseSchema(BaseModel):
+    id: int
+    descricao: str
+    professor: ProfessorResponseSchema
+
+    model_config = {"from_attributes": True}
+
+
+class NotaCreateSchema(BaseModel):
+    valor: float
+    data: date
+    id_disciplina: int
+    id_aluno: str
+
+    model_config = {"from_attributes": True}
+
+class NotaResponseSchema(BaseModel):
+    id: int
+    valor: float
+    data: date
+    disciplina: DisciplinaResponseSchema 
+    aluno: AlunoResponseSchema      
 
     model_config = {"from_attributes": True}
