@@ -75,9 +75,10 @@ class Professor(Pessoa):
     graduacao = Column("graduacao", String(255), nullable=False)
     cargaHoraria = Column("carga_horaria", Float, nullable=False)
 
-    # relacionamento com escola
+    # relacionamento com escola e disciplina
     idEscola = Column("id_escola", Integer, ForeignKey("escolas.id"), nullable=False)
     escola = relationship("Escola", back_populates="professores")
+    disciplinas = relationship("Disciplina", back_populates="professor")
 
     def __init__(self, nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha, emailPessoal, graduacao, cargaHoraria, escola):
         super().__init__(nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha)
@@ -111,9 +112,10 @@ class Aluno(Pessoa):
     anoEscolar = Column("ano_escolar", Integer, nullable=False)
     historicoEscolar = Column("historico_escolar", String(255), nullable=True)
 
-    # relacionamento com responsável
+    # relacionamento com responsável e nota
     idResponsavel = Column("id_responsavel", String(11), ForeignKey("responsaveis.cpf"), nullable=True)
     responsavel = relationship("Responsavel", back_populates="alunos")
+    notas = relationship("Nota", back_populates="aluno")
 
     __mapper_args__ = {"polymorphic_identity": TipoPessoa.ALUNO}
 
@@ -134,6 +136,40 @@ class Responsavel(Pessoa):
         self.alunos.append(aluno)
 
     __mapper_args__ = {"polymorphic_identity": TipoPessoa.RESPONSAVEL}
+
+
+class Disciplina(Base):
+    __tablename__ = "disciplinas"
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    descricao = Column("descricao", String(255), nullable=False)
+
+    # relacionamento com professor e nota
+    idProfessor = Column("id_professor", String(11), ForeignKey("professores.cpf"), nullable=False)
+    professor = relationship("Professor", back_populates="disciplinas")
+    notas = relationship("Nota", back_populates="disciplina")
+
+    def __init__(self, descricao, professor):
+        self.descricao = descricao
+        self.professor = professor
+
+
+class Nota(Base):
+    __tablename__ = "notas"
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    valor = Column("valor", Float, nullable=False)
+    data = Column("data", Date, nullable=False)
+
+    # relacionamento com disciplina e aluno
+    idDisciplina = Column("id_disciplina", Integer, ForeignKey("disciplinas.id"), nullable=False)
+    disciplina = relationship("Disciplina", back_populates="notas")
+    idAluno = Column("id_aluno", String(11), ForeignKey("alunos.cpf"), nullable=False)
+    aluno = relationship("Aluno", back_populates="notas")
+
+    def __init__(self, valor, data, disciplina, aluno):
+        self.valor = valor
+        self.data = data
+        self.disciplina = disciplina
+        self.aluno = aluno
 
 
 Base.metadata.create_all(bind=db)
