@@ -62,3 +62,8 @@ class TipoSanguineo(enum.Enum):
     AB_NEGATIVO = "AB-"
     O_POSITIVO = "O+"
     O_NEGATIVO = "O-"
+
+class AnoEscolar(enum.Enum):
+    PRIMEIRO = "PRIMEIRO"
+    SEGUNDO = "SEGUNDO"
+    TERCEIRO = "TERCEIRO"

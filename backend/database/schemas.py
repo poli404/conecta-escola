@@ -117,6 +117,38 @@ class ResponsavelResponseSchema(PessoaResponseSchema):
     model_config = {"from_attributes": True}
 
 
+class TurmaCreateSchema(BaseModel):
+    ano_escolar: AnoEscolar
+    identificador: str
+    id_escola: int
+
+    model_config = {"from_attributes": True}
+
+class TurmaResponseSchema(BaseModel):
+    id: int
+    ano_escolar: AnoEscolar
+    identificador: str
+    escola: EscolaResponseSchema
+    alunos_turma: list[AlunoTurmaResponseSchema]
+
+    model_config = {"from_attributes": True}
+
+
+class AlunoTurmaCreateSchema(BaseModel):
+    data_matricula: date
+    id_aluno: str
+    id_turma: int
+
+    model_config = {"from_attributes": True}
+
+class AlunoTurmaResponseSchema(BaseModel):
+    data_matricula: date
+    aluno: AlunoResponseSchema
+    turma: TurmaResponseSchema
+
+    model_config = {"from_attributes": True}
+
+
 class DisciplinaCreateSchema(BaseModel):
     descricao: str
     id_professor: str  # cpf (FK)

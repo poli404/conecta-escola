@@ -23,8 +23,9 @@ class Escola(Base):
     email = Column("email", String(255), unique=True)
     senha = Column("senha", String(255), nullable=False)
 
-    # relacionamento com professores
+    # relacionamento com professor e turma
     professores = relationship("Professor", back_populates="escola")
+    turmas = relationship("Turma", back_populates="escola")
 
     def __init__(self, nome, cnpj, endereco, dominio, senha):
         self.nome = nome
@@ -109,13 +110,13 @@ class Aluno(Pessoa):
     situacaoAnoAnterior = Column("situacao_ano_anterior", Boolean, nullable=False)
     certidaoNascimento = Column("certidao_nascimento", String(255), nullable=False)
     carteiraVacinacao = Column("carteira_vacinacao", String(255), nullable=False)
-    anoEscolar = Column("ano_escolar", Integer, nullable=False)
     historicoEscolar = Column("historico_escolar", String(255), nullable=True)
 
-    # relacionamento com responsável e nota
+    # relacionamento com responsável, nota e aluno_turma
     idResponsavel = Column("id_responsavel", String(11), ForeignKey("responsaveis.cpf"), nullable=True)
     responsavel = relationship("Responsavel", back_populates="alunos")
     notas = relationship("Nota", back_populates="aluno")
+    turmas_aluno = relationship("AlunoTurma", back_populates="aluno")
 
     __mapper_args__ = {"polymorphic_identity": TipoPessoa.ALUNO}
 
@@ -171,5 +172,35 @@ class Nota(Base):
         self.disciplina = disciplina
         self.aluno = aluno
 
+
+class Turma(Base):
+    __tablename__ = "turmas"
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    ano_escolar = Column("ano_escolar", Enum(AnoEscolar), nullable=False)
+    identificador = Column("identificador", String(1), nullable=False)
+
+    # relacionamento com escola e alunoTurma
+    idEscola = Column("id_escola", Integer, ForeignKey("escolas.id"), nullable=False)
+    escola = relationship("Escola", back_populates="turmas")
+    alunos_turma = relationship("AlunoTurma", back_populates="turma")
+
+    def __init__(self, ano_escolar, identificador, escola):
+        self.ano_escolar = ano_escolar
+        self.identificador = identificador
+        self.escola = escola
+
+
+class AlunoTurma(Base):
+    __tablename__ = "alunos_turmas"
+    data_matricula = Column("data_matricula", Date, nullable=False)
+
+    # relacionamento com aluno e turma
+    idAluno = Column("id_aluno", String(11), ForeignKey("alunos.cpf"), primary_key=True)
+    aluno = relationship("Aluno", back_populates="turmas_aluno")
+    idTurma = Column("id_turma", Integer, ForeignKey("turmas.id"), primary_key=True)
+    turma = relationship("Turma", back_populates="alunos_turma")
+
+    def __init__(self, data_matricula):
+        self.data_matricula = data_matricula
 
 Base.metadata.create_all(bind=db)
