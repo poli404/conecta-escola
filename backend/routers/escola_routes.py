@@ -12,13 +12,20 @@ escola_router = APIRouter(prefix="/escola", tags=["escola"])
 
 @escola_router.get("/", response_model=list[EscolaResponseSchema])
 def listar_escolas(db: Session = Depends(get_db)):
+    """
+    Lista todas as escoladas cadastradas.
+    """
     escolas = db.query(Escola).all()
     if not escolas:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhuma escola cadastrada.")
     return escolas
 
+
 @escola_router.post("/cadastro", response_model=EscolaResponseSchema, status_code=status.HTTP_201_CREATED)
 def cadastrar_escola(escola: EscolaCreateSchema, db: Session = Depends(get_db)):
+    """
+    Cadastra uma nova escola no sistema.
+    """
     existente = db.query(Escola).filter(Escola.dominio == escola.dominio).first()
     if existente:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Escola já cadastrada.")

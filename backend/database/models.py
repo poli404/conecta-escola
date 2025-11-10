@@ -40,7 +40,7 @@ class Pessoa(Base):
     __tablename__ = "pessoas"
     nome = Column("nome", String(255), nullable=False)
     cpf = Column("cpf", String(11), primary_key=True)
-    rg = Column("rg", String(15), nullable=False)
+    rg = Column("rg", String(14), nullable=False)
     corRaca = Column("cor_raca", Enum(CorRaca), nullable=False)
     endereco = Column("endereco", String(255), nullable=False)
     cep = Column("cep", String(8), nullable=False)
@@ -87,11 +87,11 @@ class Professor(Pessoa):
         self.emailEscolar = self.gerar_email(nome, escola.dominio)
         self.graduacao = graduacao
         self.cargaHoraria = cargaHoraria
-        #self.escola = escola
+        self.escola = escola
         #self.tipo = TipoPessoa.PROFESSOR
 
     @staticmethod
-    def gerar_email(nome, dominio):
+    def gerar_email(nome, dominio) -> str:
         nome_sem_acento = ''.join(c for c in unicodedata.normalize('NFD', nome) if unicodedata.category(c) != 'Mn')
         nome_formatado = nome_sem_acento.lower().replace(" ", "")
         return f"{nome_formatado}@{dominio}.br"
@@ -114,9 +114,23 @@ class Aluno(Pessoa):
 
     # relacionamento com responsável, nota e aluno_turma
     idResponsavel = Column("id_responsavel", String(11), ForeignKey("responsaveis.cpf"), nullable=True)
-    responsavel = relationship("Responsavel", back_populates="alunos")
+    responsavel = relationship("Responsavel", back_populates="alunos", foreign_keys=[idResponsavel])
     notas = relationship("Nota", back_populates="aluno")
     turmas_aluno = relationship("AlunoTurma", back_populates="aluno")
+    
+    def __init__(self, nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha, nacionalidade, naturalidade, deficiencia,
+                 tipoSanguineo, alergia, situacaoAnoAnterior, certidaoNascimento, carteiraVacinacao, historicoEscolar):
+        super().__init__(nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha)
+        self.nacionalidade = nacionalidade
+        self.naturalidade = naturalidade
+        self.deficiencia = deficiencia
+        self.tipoSanguineo = tipoSanguineo
+        self.alergia = alergia
+        self.situacaoAnoAnterior = situacaoAnoAnterior
+        self.certidaoNascimento = certidaoNascimento
+        self.carteiraVacinacao = carteiraVacinacao
+        self.historicoEscolar = historicoEscolar
+        #self.tipo = TipoPessoa.ALUNO
 
     __mapper_args__ = {"polymorphic_identity": TipoPessoa.ALUNO}
 
@@ -128,7 +142,7 @@ class Responsavel(Pessoa):
     estadoCivil = Column("estado_civil", Enum(EstadoCivil), nullable=False)
 
     # relacionamento com aluno
-    alunos = relationship("Aluno", back_populates="responsavel")
+    alunos = relationship("Aluno", back_populates="responsavel", foreign_keys="Aluno.idResponsavel")
 
     def __init__(self, nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha, emailPessoal, estadoCivil, aluno):
         super().__init__(nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha)
