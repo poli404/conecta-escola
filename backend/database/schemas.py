@@ -82,7 +82,6 @@ class AlunoCreateSchema(PessoaCreateSchema):
     situacaoAnoAnterior: bool
     certidaoNascimento: str
     carteiraVacinacao: str
-    anoEscolar: int
     historicoEscolar: Optional[str]
 
     model_config = {"from_attributes": True}
@@ -96,9 +95,8 @@ class AlunoResponseSchema(PessoaResponseSchema):
     situacaoAnoAnterior: bool
     certidaoNascimento: str
     carteiraVacinacao: str
-    anoEscolar: int
     historicoEscolar: Optional[str]
-    responsavel: Optional[ResponsavelResponseSchema]
+    responsavel: Optional['ResponsavelBaseResponse']
 
     model_config = {"from_attributes": True}
 
@@ -109,10 +107,16 @@ class ResponsavelCreateSchema(PessoaCreateSchema):
 
     model_config = {"from_attributes": True}
 
-class ResponsavelResponseSchema(PessoaResponseSchema):
+
+class ResponsavelBaseResponse(PessoaResponseSchema):  # não associa a lista de alunos diretamente
     emailPessoal: str
     estadoCivil: EstadoCivil
-    alunos: list[AlunoResponseSchema]
+
+    model_config = {"from_attributes": True}
+
+
+class ResponsavelResponseSchema(ResponsavelBaseResponse):
+    alunos: list['AlunoResponseSchema']
 
     model_config = {"from_attributes": True}
 
@@ -129,7 +133,7 @@ class TurmaResponseSchema(BaseModel):
     ano_escolar: AnoEscolar
     identificador: str
     escola: EscolaResponseSchema
-    alunos_turma: list[AlunoTurmaResponseSchema]
+    alunos_turma: list['AlunoTurmaResponseSchema']
 
     model_config = {"from_attributes": True}
 
@@ -144,14 +148,14 @@ class AlunoTurmaCreateSchema(BaseModel):
 class AlunoTurmaResponseSchema(BaseModel):
     data_matricula: date
     aluno: AlunoResponseSchema
-    turma: TurmaResponseSchema
+    turma: 'TurmaResponseSchema'
 
     model_config = {"from_attributes": True}
 
 
 class DisciplinaCreateSchema(BaseModel):
     descricao: str
-    id_professor: str  # cpf (FK)
+    id_professor: str
 
     model_config = {"from_attributes": True}
 
@@ -179,3 +183,9 @@ class NotaResponseSchema(BaseModel):
     aluno: AlunoResponseSchema      
 
     model_config = {"from_attributes": True}
+
+
+AlunoResponseSchema.model_rebuild()
+ResponsavelResponseSchema.model_rebuild()
+TurmaResponseSchema.model_rebuild()
+AlunoTurmaResponseSchema.model_rebuild()
