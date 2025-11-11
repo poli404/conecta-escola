@@ -83,6 +83,21 @@ class AlunoCreateSchema(PessoaCreateSchema):
     certidaoNascimento: str
     carteiraVacinacao: str
     historicoEscolar: Optional[str]
+    id_escola: int
+    id_responsavel: Optional[str] = None  # CPF do responsável (opcional)
+
+    model_config = {"from_attributes": True}
+
+class AlunoBaseResponse(PessoaResponseSchema):  # aluno sem responsável 
+    nacionalidade: str
+    naturalidade: str
+    deficiencia: Optional[str]
+    tipoSanguineo: TipoSanguineo
+    alergia: Optional[str]
+    situacaoAnoAnterior: bool
+    certidaoNascimento: str
+    carteiraVacinacao: str
+    historicoEscolar: Optional[str]
 
     model_config = {"from_attributes": True}
 
@@ -100,6 +115,7 @@ class AlunoResponseSchema(PessoaResponseSchema):
 
     model_config = {"from_attributes": True}
 
+
 class ResponsavelCreateSchema(PessoaCreateSchema):
     emailPessoal: str
     estadoCivil: EstadoCivil
@@ -107,16 +123,14 @@ class ResponsavelCreateSchema(PessoaCreateSchema):
 
     model_config = {"from_attributes": True}
 
-
 class ResponsavelBaseResponse(PessoaResponseSchema):  # não associa a lista de alunos diretamente
     emailPessoal: str
     estadoCivil: EstadoCivil
 
     model_config = {"from_attributes": True}
 
-
 class ResponsavelResponseSchema(ResponsavelBaseResponse):
-    alunos: list['AlunoResponseSchema']
+    alunos: list['AlunoBaseResponse'] 
 
     model_config = {"from_attributes": True}
 
@@ -125,6 +139,7 @@ class TurmaCreateSchema(BaseModel):
     ano_escolar: AnoEscolar
     identificador: str
     id_escola: int
+    alunos: list[str] = []  # lista de CPFs dos alunos
 
     model_config = {"from_attributes": True}
 
@@ -147,8 +162,7 @@ class AlunoTurmaCreateSchema(BaseModel):
 
 class AlunoTurmaResponseSchema(BaseModel):
     data_matricula: date
-    aluno: AlunoResponseSchema
-    turma: 'TurmaResponseSchema'
+    aluno: AlunoBaseResponse  
 
     model_config = {"from_attributes": True}
 

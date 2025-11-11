@@ -9,6 +9,7 @@ from routers.escola_routes import escola_router
 from routers.professor_routes import professor_router
 from routers.aluno_routes import aluno_router
 from routers.responsavel_routes import responsavel_router
+from routers.turma_routes import turma_router
 
 origins = [
 	"http://localhost:3000",
@@ -29,3 +30,4 @@ app.include_router(escola_router)
 app.include_router(professor_router)
 app.include_router(aluno_router)
 app.include_router(responsavel_router)
+app.include_router(turma_router)

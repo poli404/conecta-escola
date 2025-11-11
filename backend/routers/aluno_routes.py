@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 # Importações de Schemas, Dependências, Modelos e Segurança
 from database.schemas import AlunoCreateSchema, AlunoResponseSchema
 from database.dependencies import get_db
-from database.models import Aluno, Responsavel
+from database.models import Aluno, Responsavel, Escola
 from routers.security import get_password_hash
 
 aluno_router = APIRouter(prefix="/aluno", tags=["aluno"])
@@ -30,12 +30,26 @@ def cadastrar_aluno(aluno: AlunoCreateSchema, db: Session = Depends(get_db)):
     aluno.cep = aluno.cep.replace("-", "")
     aluno.telefone = aluno.telefone.replace("-", "").replace("(", "").replace(")", "")
 
+    escola = db.query(Escola).filter(Escola.id == aluno.id_escola).first()
+    if not escola:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Escola não encontrada.")
+
     existente = db.query(Aluno).filter(Aluno.cpf == aluno.cpf).first()
     if existente:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Aluno(a) já cadastrado(a).")
 
+    responsavel = None
+    if aluno.id_responsavel:
+        cpf_responsavel = aluno.id_responsavel.replace(".", "").replace("-", "")
+        responsavel = db.query(Responsavel).filter(Responsavel.cpf == cpf_responsavel).first()
+        if not responsavel:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Responsável não encontrado.") 
+
     hashed_password = get_password_hash(aluno.senha)
-    novo_aluno = Aluno(**aluno.model_dump(exclude={"senha"}), senha=hashed_password)
+    novo_aluno = Aluno(**aluno.model_dump(exclude={"senha", "id_escola", "id_responsavel"}), senha=hashed_password, escola=escola)
+    
+    if responsavel:
+        novo_aluno.responsavel = responsavel
 
     db.add(novo_aluno)
     db.commit()

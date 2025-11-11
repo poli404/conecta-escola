@@ -7,7 +7,6 @@ from database.schemas import EscolaCreateSchema, EscolaResponseSchema
 from database.dependencies import get_db
 from database.models import Escola
 
-
 escola_router = APIRouter(prefix="/escola", tags=["escola"])
 
 @escola_router.get("/", response_model=list[EscolaResponseSchema])

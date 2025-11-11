@@ -23,9 +23,10 @@ class Escola(Base):
     email = Column("email", String(255), unique=True)
     senha = Column("senha", String(255), nullable=False)
 
-    # relacionamento com professor e turma
+    # relacionamento com professor, turma e aluno
     professores = relationship("Professor", back_populates="escola")
     turmas = relationship("Turma", back_populates="escola")
+    alunos = relationship("Aluno", back_populates="escola")
 
     def __init__(self, nome, cnpj, endereco, dominio, senha):
         self.nome = nome
@@ -112,14 +113,16 @@ class Aluno(Pessoa):
     carteiraVacinacao = Column("carteira_vacinacao", String(255), nullable=False)
     historicoEscolar = Column("historico_escolar", String(255), nullable=True)
 
-    # relacionamento com responsável, nota e aluno_turma
+    # relacionamento com escola, responsável, nota e aluno_turma
+    idEscola = Column("id_escola", Integer, ForeignKey("escolas.id"), nullable=False)
+    escola = relationship("Escola", back_populates="alunos")
     idResponsavel = Column("id_responsavel", String(11), ForeignKey("responsaveis.cpf"), nullable=True)
     responsavel = relationship("Responsavel", back_populates="alunos", foreign_keys=[idResponsavel])
     notas = relationship("Nota", back_populates="aluno")
     turmas_aluno = relationship("AlunoTurma", back_populates="aluno")
     
     def __init__(self, nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha, nacionalidade, naturalidade, deficiencia,
-                 tipoSanguineo, alergia, situacaoAnoAnterior, certidaoNascimento, carteiraVacinacao, historicoEscolar):
+                 tipoSanguineo, alergia, situacaoAnoAnterior, certidaoNascimento, carteiraVacinacao, historicoEscolar, escola):
         super().__init__(nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha)
         self.nacionalidade = nacionalidade
         self.naturalidade = naturalidade
@@ -130,6 +133,8 @@ class Aluno(Pessoa):
         self.certidaoNascimento = certidaoNascimento
         self.carteiraVacinacao = carteiraVacinacao
         self.historicoEscolar = historicoEscolar
+        self.escola = escola
+        
         #self.tipo = TipoPessoa.ALUNO
 
     __mapper_args__ = {"polymorphic_identity": TipoPessoa.ALUNO}
