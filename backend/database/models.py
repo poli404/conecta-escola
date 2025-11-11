@@ -7,7 +7,7 @@ from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 # cria conexão e base do banco
 load_dotenv()  # carrega .env se existir
-DB_URL = "mysql+pymysql://root:bancodedados@localhost:3306/conecta_escola" #os.getenv("DB_URL")  # DB_URL=mysql+pymysql://user:password@localhost:port/mydatabase
+DB_URL = "" #os.getenv("DB_URL")  # DB_URL=mysql+pymysql://user:password@localhost:port/mydatabase
 db = create_engine(DB_URL, echo=False, future=True)
 SessionLocal = sessionmaker(bind=db, autoflush=False, autocommit=False, future=True)
 Base = declarative_base()
