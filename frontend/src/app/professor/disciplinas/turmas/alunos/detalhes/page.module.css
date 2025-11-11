@@ -3,13 +3,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-bottom: 30px;
 }
 
 .fakeButton {
     background-color: #520f91;
     color: white;
-    padding: 10px 20px;
+    padding: 0px 20px;
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -23,11 +22,11 @@
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 5px 20px;
     text-align: left;
     width: 40%;
+    min-width: max-content;
     font-size: small;
-    margin: 50px;
 }
 
 .title {
@@ -39,3 +38,20 @@
     margin-bottom: 10px;
 }
 
+.aluno {
+    font-weight: 400;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    color: #520f91;
+}
+
+@media (min-width: 800px) {
+    .container{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-left: 30px;
+    }
+}
