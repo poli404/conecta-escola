@@ -3,8 +3,8 @@ import Image from "next/image";
 import styles from "./tabela.module.css";
 import eye from "../../../public/eye_icon.svg";
 import lupa from "../../../public/search_icon.svg";
+import notes from "../../../public/notes_icon.svg";
 
-//lógica de pesquisa no banco de dados
 export const BarraPesquisa = ({ col }) => {
     return (
         <tr>
@@ -32,9 +32,7 @@ export const CorpoTabela = ({ dados, tipo, usuario='escola' }) => {
                     <Link className={styles.text} href={`${tipo}?${dado.id}`}>{dado.nome}</Link>
                 </td>
                 <td className={styles.center}>
-                    <Link className={styles.detalhes} href={`${tipo}/turmas?id=${dado.id}`}>
-                        <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
-                    </Link>
+                    <Link className={styles.destaque} href={`${tipo}/turmas?id=${dado.id}`}>Ver Turmas</Link>
                 </td>
             </tr>
             ))}
@@ -51,8 +49,22 @@ export const CorpoTabela = ({ dados, tipo, usuario='escola' }) => {
                 </td>
                 <td className={styles.center}>{dado.turma}</td>
                 <td className={styles.center}>
+                    <Link className={styles.destaque} href={`${tipo}/alunos?id=${dado.id}`}>Ver Alunos</Link>
+                </td>
+            </tr>
+            ))}
+        </tbody>
+        );
+    } else if (tipo == 'alunos'){
+        return(
+             <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.center}>{dado.id}</td>
+                <td className={styles.left}>{dado.nome}</td>
+                <td className={styles.center}>
                     <Link className={styles.detalhes} href={`${tipo}/detalhes?id=${dado.id}`}>
-                        <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
+                        <Image src={notes} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
                     </Link>
                 </td>
             </tr>
@@ -61,31 +73,27 @@ export const CorpoTabela = ({ dados, tipo, usuario='escola' }) => {
         );
     } else if (tipo == 'detalhes'){
         return(
-             <tbody>
+            <tbody>
             {dados.map((dado) => (
             <tr key={dado.id}>
-                <td className={styles.center}>{dado.id}</td>
-                <td className={styles.left}>
-                    <Link className={styles.text} href={`${tipo}?${dado.id}`}>{dado.nome}</Link>
-                </td>
+                <td className={styles.center}>{dado.data}</td>
                 <td className={styles.center}>
-                    <Link className={styles.detalhes} href={`${tipo}/notas?id=${dado.id}`}>
-                        <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
-                    </Link>
+                    {dado.nota}</td>
+                <td className={styles.center}>
+                    <Link className={styles.destaque} href={`${tipo}?id=${dado.id}`}>Alterar Nota</Link>
                 </td>
             </tr>
             ))}
         </tbody>
         );
-    } else if (tipo == 'notas'){
+    } else if (tipo == 'faltas'){
         return(
-             <tbody>
+            <tbody>
             {dados.map((dado) => (
             <tr key={dado.id}>
-                <td className={styles.center}>{dado.idAluno}</td>
                 <td className={styles.center}>{dado.data}</td>
                 <td className={`${styles.center} ${styles.destaque}`}>
-                    <Link className={styles.destaque} href={`${tipo}?${dado.id}`}>{dado.nota}</Link>
+                    <Link href="" className={styles.excluir}>Excluir</Link>
                 </td>
             </tr>
             ))}
@@ -93,18 +101,32 @@ export const CorpoTabela = ({ dados, tipo, usuario='escola' }) => {
         );
     }
     } else {
-            if (tipo == "turmas") {
+        if (tipo == "turmas") {
         return (
         <tbody>
             {dados.map((dado) => (
             <tr key={dado.id}>
                 <td className={styles.center}>{dado.id}</td>
-                <td className={styles.left}>
-                    <Link className={styles.text} href={`${tipo}?${dado.id}`}>{dado.anoEscolar}</Link>
-                </td>
+                <td className={styles.left}>{dado.anoEscolar}</td>
                 <td className={styles.center}>{dado.turma}</td>
                 <td className={styles.center}>
                     <Link className={styles.detalhes} href={`${tipo}/detalhes?id=${dado.id}`}>
+                        <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
+                    </Link>
+                </td>
+            </tr>
+            ))}
+        </tbody>
+        );
+    } else if (tipo == "disciplinas") {
+        return (
+        <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.center}>{dado.id}</td>
+                <td className={styles.left}>{dado.nome}</td>
+                <td className={styles.center}>
+                    <Link href={`${tipo}/detalhes?id=${dado.id}`}>
                         <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
                     </Link>
                 </td>
@@ -137,11 +159,9 @@ export const CorpoTabela = ({ dados, tipo, usuario='escola' }) => {
             {dados.map((dado) => (
             <tr key={dado.id}>
                 <td className={styles.center}>{dado.id}</td>
-                <td className={styles.left}>
-                    <Link className={styles.text} href={`${tipo}/perfil?${dado.id}`}>{dado.nome}</Link>
-                </td>
+                <td className={styles.left}>{dado.nome}</td>
                 <td className={styles.center}>
-                    <Link className={styles.detalhes} href={`${tipo}/perfil?${dado.id}`}>
+                    <Link className={styles.detalhes} href={`/escola/${tipo}/perfil?${dado.id}`}>
                         <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
                     </Link>
                 </td>

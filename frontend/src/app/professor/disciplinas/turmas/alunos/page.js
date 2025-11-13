@@ -17,10 +17,10 @@ export default function Home() {
             <tr>
               <th className={styles.title}>Matrícula</th>
               <th className={styles.title}>Nome do Aluno</th>
-              <th></th>
+              <th className={`${styles.title} ${styles.center}`}>Notas e Faltas</th>
             </tr>
           </thead>
-          <CorpoTabela dados={alunos} tipo={"detalhes"} usuario="professor"/>
+          <CorpoTabela dados={alunos} tipo={"alunos"} usuario="professor"/>
         </table>
       </div>
     </main>
