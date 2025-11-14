@@ -189,6 +189,11 @@ class NotaCreateSchema(BaseModel):
 
     model_config = {"from_attributes": True}
 
+class NotaUpdateSchema(BaseModel):
+    valor: float
+
+    model_config = {"from_attributes": True}
+
 class NotaResponseSchema(BaseModel):
     id: int
     valor: float
