@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session, joinedload
 from database.schemas import AlunoCreateSchema, AlunoResponseSchema
 from database.dependencies import get_db
 from database.models import Aluno, Responsavel, Escola, AlunoTurma
-from routers.security import get_password_hash
+from routers.security import get_password_hash, get_current_escola
 
 aluno_router = APIRouter(prefix="/aluno", tags=["aluno"])
 
@@ -21,9 +21,10 @@ def listar_alunos(db: Session = Depends(get_db)):
 
 
 @aluno_router.post("/cadastro", response_model=AlunoResponseSchema, status_code=status.HTTP_201_CREATED)
-def cadastrar_aluno(aluno: AlunoCreateSchema, db: Session = Depends(get_db)):
+def cadastrar_aluno(aluno: AlunoCreateSchema, db: Session = Depends(get_db), escola_autenticada: Escola = Depends(get_current_escola)):
     """
     Cadastra um novo aluno no sistema.
+    Apenas escolas autenticadas podem cadastrar alunos.
     """
     aluno.cpf = aluno.cpf.replace(".", "").replace("-", "")
     aluno.rg = aluno.rg.replace(".", "").replace("-", "")

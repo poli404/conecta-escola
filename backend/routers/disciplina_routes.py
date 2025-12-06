@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session, joinedload
 
 from database.schemas import DisciplinaCreateSchema, DisciplinaResponseSchema, TurmaDisciplinaCreateSchema, TurmaDisciplinaResponseSchema
 from database.dependencies import get_db
-from database.models import Disciplina, Professor, Turma, TurmaDisciplina
+from database.models import Disciplina, Professor, Turma, TurmaDisciplina, Escola
+from routers.security import get_current_escola
 
 disciplina_router = APIRouter(prefix="/disciplina", tags=["disciplina"])
 
@@ -19,9 +20,10 @@ def listar_disciplinas(db: Session = Depends(get_db)):
 
 
 @disciplina_router.post("/cadastro", response_model=DisciplinaResponseSchema, status_code=status.HTTP_201_CREATED)
-def cadastrar_disciplina(disciplina: DisciplinaCreateSchema, db: Session = Depends(get_db)):
+def cadastrar_disciplina(disciplina: DisciplinaCreateSchema, db: Session = Depends(get_db), escola_autenticada: Escola = Depends(get_current_escola)):
     """
     Cadastra uma nova disciplina no sistema.
+    Apenas escolas autenticadas podem cadastrar disciplinas.
     """
     disciplina.id_professor = disciplina.id_professor.replace(".", "").replace("-", "")
 
@@ -42,9 +44,10 @@ def cadastrar_disciplina(disciplina: DisciplinaCreateSchema, db: Session = Depen
 
 
 @disciplina_router.post("/turma", response_model=TurmaDisciplinaResponseSchema, status_code=status.HTTP_201_CREATED)
-def associar_turma_disciplina(associacao: TurmaDisciplinaCreateSchema, db: Session = Depends(get_db)):
+def associar_turma_disciplina(associacao: TurmaDisciplinaCreateSchema, db: Session = Depends(get_db), escola_autenticada: Escola = Depends(get_current_escola)):
     """
     Associa uma disciplina a uma turma.
+    Apenas escolas autenticadas podem fazer associações.
     """
     turma = db.query(Turma).filter(Turma.id == associacao.id_turma).first()
     if not turma:

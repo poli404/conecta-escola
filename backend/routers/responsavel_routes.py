@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session, joinedload
 
 from database.schemas import ResponsavelCreateSchema, ResponsavelResponseSchema
 from database.dependencies import get_db
-from database.models import Responsavel, Aluno
-from routers.security import get_password_hash
+from database.models import Responsavel, Aluno, Escola
+from routers.security import get_password_hash, get_current_escola
 
 responsavel_router = APIRouter(prefix="/responsavel", tags=["responsavel"])
 
@@ -20,9 +20,10 @@ def listar_responsaveis(db: Session = Depends(get_db)):
 
 
 @responsavel_router.post("/cadastro", response_model=ResponsavelResponseSchema, status_code=status.HTTP_201_CREATED)
-def cadastrar_responsavel(responsavel: ResponsavelCreateSchema, db: Session = Depends(get_db)):
+def cadastrar_responsavel(responsavel: ResponsavelCreateSchema, db: Session = Depends(get_db), escola_autenticada: Escola = Depends(get_current_escola)):
     """
     Cadastra um novo responsável no sistema.
+    Apenas escolas autenticadas podem cadastrar responsáveis.
     """
     responsavel.cpf = responsavel.cpf.replace(".", "").replace("-", "")
     responsavel.rg = responsavel.rg.replace(".", "").replace("-", "")
