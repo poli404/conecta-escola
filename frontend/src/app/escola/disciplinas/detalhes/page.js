@@ -18,7 +18,7 @@ export default function Home() {
         <main>
             <MenuEscola/>
             <div className={styles.container}>
-                <Link className={styles.fakeButton} href="">Editar Dados</Link>
+                <Link className={styles.fakeButton} href="/escola/disciplinas/detalhes/editar">Editar Dados</Link>
                 <div className={styles.card}>
                     <p><b>Nome:</b> {disciplina.nome}</p>
                     <p><b>Descrição:</b> {disciplina.descricao}</p>
