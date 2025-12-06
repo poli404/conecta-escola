@@ -2,22 +2,23 @@
 import { useState } from "react";
 import styles from "./page.module.css";
 
-async function verificarUsuario(email, password) {
-  const formData = new URLSearchParams();
+async function verificarUsuario(formData) {
+  /*const formData = new URLSearchParams();
   formData.append('username', email);
-  formData.append('password', password);
-  const response = await fetch('http://localhost:8000/login', {
+  formData.append('password', password);*/
+  const response = await fetch('http://127.0.0.1:8000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: formData.toString()
+        body: JSON.stringify(formData)
   });
 
   if (response.status === 200) {
     console.log('usuário reconhecido');
     const data = await response.json();
-    sessionStorage.setItem('access_token', data.access_token);
+    //sessionStorage.setItem('access_token', data.access_token);
+    sessionStorage.setItem('idUser', data.id);
   } else {
     alert('Usuário ou senha incorretos!');
   }
@@ -38,8 +39,6 @@ export default function Page() {
       email: e.target.email.value,
       password: e.target.password.value
     });
-
-    sessionStorage.setItem('id', formData.email);
 
     await verificarUsuario(formData);
   }

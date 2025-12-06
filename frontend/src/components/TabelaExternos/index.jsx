@@ -1,18 +1,33 @@
+'use client';
 import Image from "next/image";
 import styles from "./tabelaExterna.module.css";
 import lupa from "../../../public/search_icon.svg";
+import { useState } from "react";
 
-//const disciplinas = getAllDisicplinas();
+//const disciplinas = getAllDisicplinas(idEscola);
 const disciplinas = [{id: 3, nome: "Física II"}];
 
-export const BarraPesquisa = ({ col }) => {
+export const BarraPesquisa = ({ col = 2, dados }) => {
+    const [formData, setFormData] = useState({
+        busca: "",
+    });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        setFormData({
+            ...formData,
+            busca: e.target.txtBusca.value,
+        });
+    }
+
     return (
         <tr>
             <th colSpan={col}>
-                <input className={styles.field} type="text" placeholder="Pesquisar"/>
+                <input className={styles.field} name="txtBusca" type="text" placeholder="Disciplina ou Data"/>
             </th>
             <th className={styles.center}>
-                <button className={styles.searchButton} type="submit">
+                <button className={styles.searchButton} type="submit" onClick={handleSubmit}>
                     <Image src={lupa} width="20" height="20" alt=" Pesquisar"/>
                 </button>
             </th>
@@ -47,7 +62,7 @@ export const CorpoTabela = ({ dados, tipo }) => {
             </tr>
             ))}
             <tr>
-                <td colspan="2"><b className={styles.title}>Total de Faltas:</b> {dados.length}</td>
+                <td colSpan="2"><b className={styles.title}>Total de Faltas:</b> {dados.length}</td>
             </tr>
         </tbody>
         );

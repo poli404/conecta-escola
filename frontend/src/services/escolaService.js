@@ -1,4 +1,4 @@
-async function cadastrarEscola(dadosEscola) {
+export async function cadastrarEscola(dadosEscola) {
   const response = await fetch('http://localhost:8000/escola/cadastro', {
     method: 'POST',
     headers: {

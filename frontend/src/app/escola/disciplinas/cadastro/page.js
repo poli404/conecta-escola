@@ -1,23 +1,9 @@
 'use client';
+import { cadastrarDisciplina } from "@/services/disciplinaService";
 import styles from "./page.module.css";
 import { useState } from 'react';
 
-async function cadastrarEscola(dadosEscola) {
-  const response = await fetch('http://localhost:8000/escola/cadastro', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(dadosEscola)
-  });
-
-  return response;
-}
-
 export default function Home() {
-  //const alunos = getAllAlunos();
-  const alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }];
-
   const [formData, setFormData] = useState({
     nome: '',
     descricao: ''
@@ -25,15 +11,10 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //const resultado = await cadastrarEscola(formData);
-    if (resultado.status == 201) {
-      alert('Escola cadastrada com sucesso!');
-    } else if (resultado.status == 409) {
-      alert('Escola já cadastrada!');
-    } else { // 500 etc
-      alert('Erro ao cadastrar escola!');
+    const resultado = await cadastrarDisciplina(formData);
+    if (resultado) {
+      alert("Disciplina cadastrada com sucesso!");
     }
-      
   };
 
   const handleChange = (e) => {

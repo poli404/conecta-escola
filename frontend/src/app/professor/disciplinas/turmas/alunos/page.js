@@ -2,9 +2,10 @@ import { MenuProfessor } from "@/components/MenuProfessor";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { CorpoTabela, BarraPesquisa } from "@/components/Tabela";
+import { getAlunosTurma } from "@/services/alunoService";
 
 export default function Home() {
-  //const alunos = getAlunos(turma);
+  //const Aalunos = getAlunosTurma(idTurma);
   const alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }]; // Dados simulados
 
   return (

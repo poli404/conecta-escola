@@ -1,0 +1,22 @@
+.menu{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.alunos {
+    background-color: rgb(119, 37, 196);
+    padding: 10px 0;
+}
+
+.itens {
+    background-color: blueviolet;
+    padding: 10px 0;
+}
+
+.menuItem{
+    text-decoration: none;
+    color: white;
+    padding: 15px;
+}

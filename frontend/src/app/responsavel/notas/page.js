@@ -1,13 +1,10 @@
 import styles from "./page.module.css";
 import { CorpoTabela, BarraPesquisa } from "@/components/TabelaExternos";
 import { MenuAluno } from "@/components/MenuAluno";
-import { getFaltas } from "@/services/alunoService";
 
 export default function Home() {
-  const faltas = getFaltas(idAluno);
-  if (faltas == null) {
-    faltas = [{id: 1, data: "10/02/2025", idAluno : 1, idDisciplina: 3}]; // []
-  }
+  //const alunos = getNotas(idAluno);
+  const notas = [{id: 1, data: "10/02/2025", nota: 9.2, idAluno : 1, idDisciplina: 3}];
 
   return (
     <main>
@@ -18,10 +15,11 @@ export default function Home() {
             <BarraPesquisa/>
             <tr>
               <th className={styles.title}>Disciplina</th>
-              <th className={styles.title}>Data Falta</th>
+              <th className={styles.title}>Data Avaliação</th>
+              <th className={styles.title}>Nota Avaliação</th>
             </tr>
           </thead>
-          <CorpoTabela dados={faltas} tipo="faltas"/>
+          <CorpoTabela dados={notas} tipo="notas"/>
         </table>
       </div>
     </main>

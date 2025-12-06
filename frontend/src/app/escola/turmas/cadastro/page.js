@@ -2,23 +2,13 @@
 import { useRef } from "react";
 import styles from "./page.module.css";
 import { useState } from 'react';
-
-async function cadastrarEscola(dadosEscola) {
-  const response = await fetch('http://localhost:8000/escola/cadastro', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(dadosEscola)
-  });
-
-  return response;
-}
+import { getTodosAlunosEscolaAnoEscolar } from "@/services/alunoService";
+import { cadastrarTurma } from "@/services/turmaService";
 
 export default function Home() {
   const alunosRef = useRef();
-  //const alunos = getAllAlunos();
-  const alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }];
+  const alunos = []; // inicia sem alunos -> esperar o ano escolar
+  alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }];
 
   const [formData, setFormData] = useState({
     anoEscolar: '',
@@ -37,15 +27,7 @@ export default function Home() {
         formData.alunos.push(selected[i].value); // adiciona o id do aluno ao array de alunos
       }
     }
-    //const resultado = await cadastrarEscola(formData);
-    if (resultado.status == 201) {
-      alert('Escola cadastrada com sucesso!');
-    } else if (resultado.status == 409) {
-      alert('Escola já cadastrada!');
-    } else { // 500 etc
-      alert('Erro ao cadastrar escola!');
-    }
-      
+    const resultado = await cadastrarTurma(formData);
   };
 
   const handleChange = (e) => {
@@ -53,6 +35,10 @@ export default function Home() {
       ...formData,
       [e.target.name] : e.target.value
     });
+
+    if (e.target.name === 'anoEscolar') {
+      //const alunos = getTodosAlunosEscolaAnoEscolar(idEscola, formData.anoEscolar);
+    }
   };
 
   console.log(formData);

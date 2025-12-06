@@ -1,13 +1,10 @@
 import styles from "./page.module.css";
 import { CorpoTabela, BarraPesquisa } from "@/components/TabelaExternos";
 import { MenuAluno } from "@/components/MenuAluno";
-import { getFaltas } from "@/services/alunoService";
 
 export default function Home() {
-  const faltas = getFaltas(idAluno);
-  if (faltas == null) {
-    faltas = [{id: 1, data: "10/02/2025", idAluno : 1, idDisciplina: 3}]; // []
-  }
+  //const faltas = getFaltas(idAluno);
+  const faltas = [{id: 1, data: "10/02/2025", idAluno : 1, idDisciplina: 3}];
 
   return (
     <main>

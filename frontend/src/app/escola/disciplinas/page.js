@@ -2,9 +2,10 @@ import { MenuEscola } from "@/components/MenuEscola";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { CorpoTabela, BarraPesquisa } from "@/components/Tabela";
+import { getTodasDisciplinasEscola } from "@/services/disciplinaService";
 
 export default function Home() {
-  //const alunos = getAllTurmas();
+  //const disciplinas = getTodasDisciplinasEscola(idEscola);
   const disciplinas = [{id : 1, nome: 'Matemática', descricao : "algo"}];
 
   return (

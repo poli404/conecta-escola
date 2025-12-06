@@ -2,14 +2,7 @@
 import { useState } from 'react';
 import { MenuEscola } from "@/components/MenuEscola";
 import styles from "./page.module.css";
-
-async function cadastrarAluno(dados) {
-  const resposta = fetch(`https://localhost:8000/aluno/cadastro`, {
-    headers: "application/json",
-    body: JSON.stringify(dados)
-  });
-
-}
+import { cadastrarAluno } from '@/services/alunoService';
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -23,11 +16,11 @@ export default function Home() {
       cep: '',
       uf: 'parana',
       nascimento: '',
-      nacionalidade: '',
+      nacionalidade: 'brasileira',
       naturalidade: '',
       tipoSangue: '',
-      deficiencia: '',
-      alergia: '',
+      deficiencia: 'N/A',
+      alergia: 'N/A',
       anoEscolar: '',
       situacaoAnterior: '',
       senha: Math.random().toString(36).slice(-10)
@@ -35,11 +28,11 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      //const resultado = await cadastrarEscola(formData);
-      alert('Escola cadastrada com sucesso!');
-    } catch (erro) {
-      alert('Erro ao cadastrar escola');
+    const resultado = await cadastrarAluno(formData);
+    if (resultado != null) {
+      alert('Aluno cadastrado com sucesso!');
+    } else {
+      alert('Erro ao cadastrar aluno!');
     }
   };
 
@@ -55,16 +48,16 @@ export default function Home() {
       <MenuEscola/>
             <div className={styles.container}>
         <h1>Cadastro de Novo Aluno</h1>
-        <form className={styles.forms}>
+        <form className={styles.forms} onSubmit={handleSubmit}>
           <div>
             <h3 className={styles.title}>Informações Pessoais</h3>
             <label htmlFor="nome">Nome:</label>
             <input className={styles.field} type="text" id="nome" name="nome" value={formData.nome} onChange={handleChange} required/>
             <div className={styles.linha}>
               <label htmlFor="cpf">CPF:</label>
-              <input className={`${styles.field} ${styles.mini}`} type="text" id="cpf" name="cpf" placeholder="123.456.789-10" required/>
+              <input className={`${styles.field} ${styles.mini}`} type="text" id="cpf" name="cpf" placeholder="123.456.789-10" value={formData.cpf} onChange={handleChange} required/>
               <label htmlFor="rg">RG:</label>
-              <input className={`${styles.field} ${styles.mini}`} type="text" id="rg" name="rg" placeholder="12.345.678-9" required/>
+              <input className={`${styles.field} ${styles.mini}`} type="text" id="rg" name="rg" placeholder="12.345.678-9" value={formData.rg} onChange={handleChange} required/>
             </div>
             <div className={styles.linha}>
               <label htmlFor="genero">Gênero:</label>
@@ -83,12 +76,12 @@ export default function Home() {
               </select>
             </div>
             <label htmlFor="telefone">Telefone do Responsável:</label>
-            <input className={styles.field} type="tel" id="telefone" name="telefone" placeholder="(99) 99999-9999" required/>
+            <input className={styles.field} type="tel" id="telefone" name="telefone" placeholder="(99) 99999-9999" value={formData.telefone} onChange={handleChange}/>
             <label htmlFor="endereco">Endereço:</label>
-            <input className={styles.field} type="text" id="endereco" name="endereco" required/>
+            <input className={styles.field} type="text" id="endereco" name="endereco" value={formData.endereco} onChange={handleChange} required/>
             <div className={styles.linha}>
               <label htmlFor="cep">CEP:</label>
-              <input className={`${styles.field} ${styles.mini}`} type="text" id="cep" name="cep" placeholder="12345-678" required/>
+              <input className={`${styles.field} ${styles.mini}`} type="text" id="cep" name="cep" placeholder="12345-678" value={formData.cep} onChange={handleChange} required/>
               <label htmlFor="uf">UF:</label>
               <select id="uf" className={`${styles.field} ${styles.mini}`} value={formData.uf} onChange={handleChange} name="uf" required>
                 <option value="acre">AC</option>
@@ -121,18 +114,18 @@ export default function Home() {
               </select>
             </div>
             <label htmlFor="nascimento">Data de Nascimento:</label>
-            <input className={styles.field} type="date" id="nascimento" name="nascimento" required/>
+            <input className={styles.field} type="date" id="nascimento" name="nascimento" value={formData.nascimento} onChange={handleChange} required/>
             <label htmlFor="certidaoNascimento">Certidão de Nascimento:</label>
-            <input className={styles.field} type="file" id="certidaoNascimento" name="certidaoNascimento" required/>
+            <input className={styles.field} type="file" id="certidaoNascimento" name="certidaoNascimento"/>
             <label htmlFor="nacionalidade">Nacionalidade:</label>
-            <input className={styles.field} type="text" id="nacionalidade" name="nacionalidade" placeholder="Brasileira(o)" required/>
+            <input className={styles.field} type="text" id="nacionalidade" name="nacionalidade" placeholder="Brasileira(o)" value={formData.nacionalidade} onChange={handleChange} required/>
             <label htmlFor="naturalidade">Naturalidade:</label>
-            <input className={styles.field} type="text" id="naturalidade" name="naturalidade" placeholder="Brasil" required/>
+            <input className={styles.field} type="text" id="naturalidade" name="naturalidade" placeholder="Maringá" value={formData.naturalidade} onChange={handleChange} required/>
             <label htmlFor="foto">Foto do Aluno:</label>
             <input className={styles.field} type="file" id="foto" name="foto"/>
             <h3 className={styles.title}>Informações de Saúde</h3>
             <label htmlFor="tipoSangue">Tipo Sanguíneo:</label>
-            <select id="tipoSangue" className={styles.field} name="tipoSangue" required>
+            <select id="tipoSangue" className={styles.field} name="tipoSangue" value={formData.tipoSangue} onChange={handleChange} required>
               <option value="A+">A+</option>
               <option value="A-">A-</option>
               <option value="B+">B+</option>
@@ -143,23 +136,23 @@ export default function Home() {
               <option value="O-">O-</option>
             </select>
             <label htmlFor="vacinacao">Carteira de Vacinação:</label>
-            <input className={styles.field} type="file" id="vacinacao" name="vacinacao" required/>
+            <input className={styles.field} type="file" id="vacinacao" name="vacinacao"/>
             <label htmlFor="deficiencia">Possui alguma deficiência?</label>
-            <input className={styles.field} type="text" id="deficiencia" name="deficiencia" placeholder="N/A" required/>
+            <input className={styles.field} type="text" id="deficiencia" name="deficiencia" placeholder="N/A" value={formData.deficiencia} onChange={handleChange} required/>
             <label htmlFor="alergia">Possui alergias?</label>
-            <input className={styles.field} type="text" id="alergia" name="alergia" placeholder="N/A" required/>
+            <input className={styles.field} type="text" id="alergia" name="alergia" placeholder="N/A" value={formData.alergia} onChange={handleChange} required/>
             <h3 className={styles.title}>Informações Escolares</h3>
             <div className={styles.linha}>
               <label>Ano Escolar:</label>
-              <input className={`${styles.field} ${styles.mini}`} type="number" id="anoEscolar" name="anoEscolar"/>
+              <input className={`${styles.field} ${styles.mini}`} type="number" min="1" max="3" id="anoEscolar" name="anoEscolar" value={formData.anoEscolar} onChange={handleChange}/>
               <label>Situação no ano anterior:</label>
-              <select id="situacaoAnterior" className={`${styles.field} ${styles.mini}`} name="situacaoAnterior" required>
+              <select id="situacaoAnterior" className={`${styles.field} ${styles.mini}`} name="situacaoAnterior" value={formData.situacaoAnterior} onChange={handleChange} required>
                 <option value="aprovado">Aprovado</option>
                 <option value="reprovado">Reprovado</option>
               </select>
             </div><br></br>
             <label htmlFor="historicoEscolar">Histórico Escolar:</label>
-            <input className={styles.field} type="file" id="historicoEscolar" name="historicoEscolar" min="1" max="3" required/>
+            <input className={styles.field} type="file" id="historicoEscolar" name="historicoEscolar"/>
           </div>
           <button type="submit">Cadastrar Aluno</button>
         </form>

@@ -4,22 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { MenuEscola } from "@/components/MenuEscola";
 import styles from "./page.module.css";
-
-async function getAluno() {
-    const searchParams = useSearchParams();
-    const idAluno = searchParams.get("id");
-
-    const resposta = await fetch(`https://localhost:8000/alunos/${idAluno}`);
-
-    if (resposta.status === 200) {
-        return JSON(resposta.body);
-    } else {
-        alert("Aluno não encontrado!");
-    }
-}
+import { getAluno } from "@/services/alunoService";
 
 export default function Home() {
-    //const aluno = getAluno();
+    const searchParams = useSearchParams();
+    const idAluno = searchParams.get("id");
+    //const aluno = getAluno(idAluno);
+
     const aluno = {id: 1, nome: "Maria Eduarda de Mello Policante", cpf: "143.742.909-23", endereco: "Rua Horário Hacanello, 5350 - 1403", telefone: "(44) 99935-5633", tipoSangue: "O+", anoEscolar: "9", turma: "A", deficiencia: "Altas Habilidades", alergia: null};
     
     return (
