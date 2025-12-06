@@ -167,6 +167,7 @@ class Disciplina(Base):
     idProfessor = Column("id_professor", String(11), ForeignKey("professores.cpf"), nullable=False)
     professor = relationship("Professor", back_populates="disciplinas")
     notas = relationship("Nota", back_populates="disciplina")
+    turmas_disciplina = relationship("TurmaDisciplina", back_populates="disciplina")
 
     def __init__(self, descricao, professor):
         self.descricao = descricao
@@ -198,10 +199,11 @@ class Turma(Base):
     ano_escolar = Column("ano_escolar", Enum(AnoEscolar), nullable=False)
     identificador = Column("identificador", String(1), nullable=False)
 
-    # relacionamento com escola e alunoTurma
+    # relacionamento com escola, aluno_turma e turma_disciplina
     idEscola = Column("id_escola", Integer, ForeignKey("escolas.id"), nullable=False)
     escola = relationship("Escola", back_populates="turmas")
     alunos_turma = relationship("AlunoTurma", back_populates="turma")
+    disciplinas_turma = relationship("TurmaDisciplina", back_populates="turma")
 
     def __init__(self, ano_escolar, identificador, escola):
         self.ano_escolar = ano_escolar
@@ -221,5 +223,19 @@ class AlunoTurma(Base):
 
     def __init__(self, data_matricula):
         self.data_matricula = data_matricula
+
+
+class TurmaDisciplina(Base):
+    __tablename__ = "turmas_disciplinas"
+    ano_letivo = Column("ano_letivo", Integer, nullable=False)
+
+    # relacionamento com turma e disciplina
+    idTurma = Column("id_turma", Integer, ForeignKey("turmas.id"), primary_key=True)
+    turma = relationship("Turma", back_populates="disciplinas_turma")
+    idDisciplina = Column("id_disciplina", Integer, ForeignKey("disciplinas.id"), primary_key=True)
+    disciplina = relationship("Disciplina", back_populates="turmas_disciplina")
+
+    def __init__(self, ano_letivo):
+        self.ano_letivo = ano_letivo
 
 Base.metadata.create_all(bind=db)

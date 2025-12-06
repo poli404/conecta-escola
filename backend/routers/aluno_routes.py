@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 # Importações de Schemas, Dependências, Modelos e Segurança
 from database.schemas import AlunoCreateSchema, AlunoResponseSchema
 from database.dependencies import get_db
-from database.models import Aluno, Responsavel, Escola
+from database.models import Aluno, Responsavel, Escola, AlunoTurma
 from routers.security import get_password_hash
 
 aluno_router = APIRouter(prefix="/aluno", tags=["aluno"])
@@ -55,3 +55,63 @@ def cadastrar_aluno(aluno: AlunoCreateSchema, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(novo_aluno)
     return novo_aluno
+
+
+@aluno_router.get("/{cpf}", response_model=AlunoResponseSchema)
+def buscar_aluno(cpf: str, db: Session = Depends(get_db)):
+    """
+    Busca um aluno específico por CPF.
+    """
+    cpf_limpo = cpf.replace(".", "").replace("-", "")
+    
+    aluno = db.query(Aluno).options(joinedload(Aluno.responsavel)).filter(
+        Aluno.cpf == cpf_limpo
+    ).first()
+    
+    if not aluno:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Aluno não encontrado.")
+    return aluno
+
+
+@aluno_router.get("/turma/{id_turma}", response_model=list[AlunoResponseSchema])
+def listar_alunos_por_turma(id_turma: int, db: Session = Depends(get_db)):
+    """
+    Lista todos os alunos matriculados em uma turma específica.
+    """ 
+    alunos = db.query(Aluno).join(AlunoTurma).filter(
+        AlunoTurma.idTurma == id_turma
+    ).options(joinedload(Aluno.responsavel)).all()
+    
+    if not alunos:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhum aluno encontrado para esta turma.")
+    return alunos
+
+
+@aluno_router.get("/responsavel/{cpf}", response_model=list[AlunoResponseSchema])
+def listar_alunos_por_responsavel(cpf: str, db: Session = Depends(get_db)):
+    """
+    Lista todos os alunos associados a um responsável específico.
+    """
+    cpf_limpo = cpf.replace(".", "").replace("-", "")
+    
+    alunos = db.query(Aluno).filter(
+        Aluno.idResponsavel == cpf_limpo
+    ).options(joinedload(Aluno.responsavel)).all()
+    
+    if not alunos:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhum aluno encontrado para este responsável.")
+    return alunos
+
+
+@aluno_router.get("/escola/{id_escola}", response_model=list[AlunoResponseSchema])
+def listar_alunos_por_escola(id_escola: int, db: Session = Depends(get_db)):
+    """
+    Lista todos os alunos matriculados em uma escola específica.
+    """
+    alunos = db.query(Aluno).filter(
+        Aluno.idEscola == id_escola
+    ).options(joinedload(Aluno.responsavel)).all()
+    
+    if not alunos:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhum aluno encontrado para esta escola.")
+    return alunos

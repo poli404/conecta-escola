@@ -43,3 +43,17 @@ def cadastrar_professor(professor: ProfessorCreateSchema, db: Session = Depends(
     db.commit()
     db.refresh(novo_professor)
     return novo_professor
+
+
+@professor_router.get("/escola/{id_escola}", response_model=list[ProfessorResponseSchema])
+def listar_professores_por_escola(id_escola: int, db: Session = Depends(get_db)):
+    """
+    Lista todos os professores de uma escola específica.
+    """
+    professores = db.query(Professor).filter(
+        Professor.idEscola == id_escola
+    ).options(joinedload(Professor.escola)).all()
+    
+    if not professores:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhum professor encontrado para esta escola.")
+    return professores

@@ -204,6 +204,20 @@ class NotaResponseSchema(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class TurmaDisciplinaCreateSchema(BaseModel):
+    id_turma: int
+    id_disciplina: int
+    ano_letivo: int
+
+    model_config = {"from_attributes": True}
+
+class TurmaDisciplinaResponseSchema(BaseModel):
+    ano_letivo: int
+    disciplina: DisciplinaResponseSchema
+
+    model_config = {"from_attributes": True}
+
+
 AlunoResponseSchema.model_rebuild()
 ResponsavelResponseSchema.model_rebuild()
 TurmaResponseSchema.model_rebuild()
