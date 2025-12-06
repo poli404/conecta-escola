@@ -9,16 +9,16 @@ import { getAlunosResponsavel } from "@/services/responsavelService";
 export default function Home() {
     const searchParams = useSearchParams();
     const idResponsavel = searchParams.get("id");
-    //const aluno = getResponsavel(idAResponsavel);
+    //const aluno = getResponsavel(idResponsavel);
 
     const responsavel = {id: 1, nome: "Sulema de Mello Amaro Policante" , cpf: "143.742.909-23", rg: "19.225.260-4", telefone: "(44)999355633", endereco: "Rua Horário Hacanello, 5350 - 1403", estadoCivil: "Casado(a)"};
-     const aluno = {id: 1, nome: "Maria Eduarda de Mello Policante", cpf: "143.742.909-23"};
+    const aluno = {id: 1, nome: "Maria Eduarda de Mello Policante", cpf: "143.742.909-23"};
 
     return (
         <main>
             <MenuEscola/>
             <div className={styles.container}>
-                <Link className={styles.fakeButton} href="/escola/responsaveis/perfil/editar">Editar Dados</Link>
+                <Link className={styles.fakeButton} href={`/escola/responsaveis/perfil/editar?id=${idResponsavel}`}>Editar Dados</Link>
                 <div className={styles.card}>
                     <div>
                         <p><b>Nome:</b> {responsavel.nome}</p>

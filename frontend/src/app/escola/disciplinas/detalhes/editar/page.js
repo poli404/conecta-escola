@@ -4,7 +4,8 @@ import styles from "./page.module.css";
 import { useState } from 'react';
 
 export default function Home() {
-  const [disciplina, setFormData] = useState({
+  //const idDisciplina ...
+  const [formData, setFormData] = useState({
     nome: '',
     descricao: ''
   });
@@ -32,11 +33,11 @@ export default function Home() {
           <div>
             <h3 className={styles.title}>Informações da Disciplina</h3>
             <label htmlFor="nome">Nome da Disciplina:</label>
-            <input className={styles.field} type="text" id="nome" name="nome" placeholder="Matemática" value={disciplina.nome} onChange={handleChange} required/>
+            <input className={styles.field} type="text" id="nome" name="nome" placeholder="Matemática" value={formData.nome} onChange={handleChange} required/>
             <label htmlFor="descricao">Adicione a descrição da disciplina:</label>
-            <input className={styles.field} type="text" id="descricao" name="descricao" placeholder="Explique o principais objetivos..." value={disciplina.descricao} onChange={handleChange} required/>
+            <input className={styles.field} type="text" id="descricao" name="descricao" placeholder="Explique o principais objetivos..." value={formData.descricao} onChange={handleChange} required/>
           </div>
-          <button type="submit">Cadastrar Disciplina</button>
+          <button type="submit">Atualizar Disciplina</button>
         </form>
       </div>
     </main>

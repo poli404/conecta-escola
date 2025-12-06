@@ -17,7 +17,7 @@ export default function Home() {
         <main>
             <MenuEscola/>
             <div className={styles.container}>
-                <Link className={styles.fakeButton} href="/escola/alunos/perfil/editar">Editar Dados</Link>
+                <Link className={styles.fakeButton} href={`/escola/alunos/perfil/editar?idAluno=${aluno.id}`}>Editar Dados</Link>
                 <div className={styles.card}>
                     {(aluno.foto != null) && (<Image src={aluno.foto} width="64" height="64" alt="Foto do Aluno"/>)}
                     <div>
