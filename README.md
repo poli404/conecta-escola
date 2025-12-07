@@ -2,21 +2,21 @@
 
 - Trabalho desenvolvido para a disciplina Construção de Software (9793/01), no ano letivo de 2025, ministrada pelo professor Renato Balancieri.
 - Desenvolvedoras:
-    - [Ana Paula L. Crippa](https://github.com/anapaulacrippa) - back-end
-    - [Julia M. Sanches](https://github.com/jMarquesssss) - front-end
-    - [Maria Eduarda de M. Policante](https://github.com/poli404) - front-end
-    - [Pâmela C. Chalegre](https://github.com/pamelachalegre) - back-end
+    - [Ana Paula L. Crippa](https://github.com/anapaulacrippa) | backend
+    - [Julia M. Sanches](https://github.com/jMarquesssss) | frontend
+    - [Maria Eduarda de M. Policante](https://github.com/poli404) | frontend
+    - [Pâmela C. Chalegre](https://github.com/pamelachalegre) | backend
 
 ## Contexto
-O site Conecta Escola será desenvolvido com o objetivo de auxiliar o contato entre a coordenação, os professores, os alunos e os responsáveis para que tenham total ciência sobre as notas, as faltas e o rendimento escolar de seus dependentes.
+O Conecta Escola é uma plataforma *web* com o objetivo de modernizar e auxiliar o contato entre a coordenação, os professores, os alunos e os responsáveis para que tenham total ciência sobre as notas, as faltas e o rendimento escolar de seus dependentes.
 
 ## Backend
 
 ### Tecnologias utilizadas
 
-- FastAPI: framework para criar a API, com rotas, validações e documentação automática;
-- uvicorn: servidor que executa a API FastAPI;
-- sqlalchemy: ORM para mapear classes Python em tabelas MySQL;
+- `FastAPI`: framework para criar a API, com rotas, validações e documentação automática;
+- `uvicorn`: servidor que executa a API FastAPI;
+- `sqlalchemy`: ORM para mapear classes Python em tabelas MySQL;
 - `pymysql`, `pydantic`, `python-dotenv`, `passlib/bcrypt`: driver para conectar Python ao MySQL, bibliotecas para validação e serialização de dados nos schemas, carregamento de variáveis de ambiente de arquivos .env e hash seguro de senhas, respectivamente.
 
 ### Execução
@@ -40,7 +40,8 @@ O site Conecta Escola será desenvolvido com o objetivo de auxiliar o contato en
 - Configurar ambiente virtual:
     - Crie um arquivo `.env` na raiz do diretório `\backend` e configure a conexão com o banco de dados e a chave secreta:
     ```bash
-    DB_URL=mysql+pymysql://user:password@localhost:port/mydatabase
+    DB_URL=mysql+pymysql://user:password@localhost:port/conecta_escola
+    SECRET_KEY=your_secret_string
     ```
 
 - Rodar servidor:
