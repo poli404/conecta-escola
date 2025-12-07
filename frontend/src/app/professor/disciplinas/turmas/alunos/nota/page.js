@@ -1,11 +1,9 @@
 'use client';
-import { cadastrarDisciplina } from "@/services/disciplinaService";
 import styles from "./page.module.css";
-import { useState, useEffect } from 'react';
-import { getTodosProfessoresEscola } from "@/services/professorService";
-import { cadastrarFalta } from "@/services/faltaService";
+import { useState } from 'react';
 import { MenuProfessor } from "@/components/MenuProfessor";
 import { useSearchParams } from "next/navigation";
+import { cadastrarNota } from "@/services/notaService";
 
 export default function Home() {
   const searchParams = useSearchParams('idAluno');
@@ -23,7 +21,7 @@ export default function Home() {
     const disciplina = sessionStorage.getItem('idDisciplina');
     formData.id_disciplina = disciplina;
 
-    const resultado = await cadastrarFalta(formData, token);
+    const resultado = await cadastrarNota(formData, token);
     if (resultado.status === 201) {
       alert("Falta cadastrada com sucesso!");
     } else {
@@ -47,8 +45,8 @@ export default function Home() {
           <div>
             <label htmlFor="data">Data:</label>
             <input className={styles.field} type="date" id="data" name="data" value={formData.data} onChange={handleChange} required/>  
-            <label htmlFor="quantidade">Nota:</label>
-            <input className={styles.field} type="number" id="quantidade" name="quantidade" value={formData.quantidade} onChange={handleChange} required/>
+            <label htmlFor="valor">Nota:</label>
+            <input className={styles.field} type="number" id="valor" name="valor" placeholder="6.0" value={formData.valor} onChange={handleChange} required/>
           </div>
           <button type="submit">Adicionar</button>
         </form>

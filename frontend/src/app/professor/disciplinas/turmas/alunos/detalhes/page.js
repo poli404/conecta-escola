@@ -1,26 +1,49 @@
 'use client';
 import { MenuProfessor } from "@/components/MenuProfessor";
 import styles from "./page.module.css";
-import { TabelasEscola, TabelasProfessor } from "@/components/Tabela";
+import { TabelasProfessor } from "@/components/Tabela";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { getAluno, getFaltas, getNotas } from "@/services/alunoService";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const searchParams = useSearchParams('idAluno');
+  const searchParams = useSearchParams();
   const idAluno = searchParams.get('idAluno');
-  //const notas = getNotas(idAluno);
-  //const faltas = getFaltas(idAluno);
-  //const aluno = getNomeAluno(idAluno);
-  const notas = [{ id: 1, idAluno: 1, nota: 10.0, idDisciplina: 1, data: '30/4/2025' }, { id: 2, idAluno: 1, nota: 10.0, idDisciplina: 1, data: '3/8/2025' }]; // Dados simulados
-  const faltas = [{ id: 1, idAluno: 1, idDisciplina: 1, data: '30/10/2025'}, { id: 2, idAluno: 1, idDisciplina: 1, data: '13/08/2025' }]; // Dados simulados
-  const aluno = "Maria Eduarda de Mello Policante";
+  const [notas, setNotas] = useState(null);
+  const [faltas, setFaltas] = useState(null);
+  const [aluno, setAluno] = useState(null);
+      
+  useEffect(() => {
+    (async () => {
+      try {
+        const token = sessionStorage.getItem('access_token');
+
+        const notasData = await getNotas(idAluno, token);
+        const faltasData = await getFaltas(idAluno);
+        const alunoData = await getAluno(idAluno, token);
+        setNotas(notasData);
+        setFaltas(faltasData);
+        setAluno(alunoData);
+      } catch (err) {
+        console.error("Erro ao buscar notas e faltas:", err);
+        setNotas([]);
+        setFaltas([]);
+        setFaltas({});
+      }
+    })();
+    }, []);
+      
+  const mostrarNotas = notas ?? [];
+  const mostrarFaltas = faltas ?? [];
+  const mostrarAluno = aluno ?? {};
 
   return (
     <main>
       <MenuProfessor/>
-      <h3 className={styles.aluno}><b>Aluno:</b> {aluno}</h3>
+      <h3 className={styles.aluno}><b>Aluno:</b> {mostrarAluno.nome}</h3>
       <div className={styles.container}>
-          <div>
+          <div className={styles.secao}>
             <table className={styles.table} id="tabelaNotas">
             <caption className={styles.title}>Notas</caption>
             <thead>
@@ -30,7 +53,7 @@ export default function Home() {
               <th></th>
             </tr>
             </thead>
-            <TabelasProfessor dados={notas} tipo={"detalhes"}/>
+            <TabelasProfessor dados={mostrarNotas} tipo={"detalhes"}/>
           </table>
           <Link className={styles.fakeButton} href={`nota?idAluno=${idAluno}`}>Adicionar Nota</Link>
           </div>
@@ -43,7 +66,7 @@ export default function Home() {
                 <th></th>
               </tr>
               </thead>
-              <TabelasProfessor dados={faltas} tipo={"faltas"}/>
+              <TabelasProfessor dados={mostrarFaltas} tipo={"faltas"}/>
           </table>
           <Link className={styles.fakeButton} href={`falta?idAluno=${idAluno}`}>Adicionar Falta</Link>
           </div>

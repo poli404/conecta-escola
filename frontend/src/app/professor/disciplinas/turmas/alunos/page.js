@@ -24,8 +24,7 @@ export default function Home() {
     }, []);
     
   const mostrarAlunos = alunos ?? [];
-  //const alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }]; // Dados simulados
-
+  
   return (
     <main>
       <MenuProfessor/>
@@ -34,7 +33,6 @@ export default function Home() {
           <thead>
             <BarraPesquisa col="2"/>
             <tr>
-              <th className={styles.title}>Matrícula</th>
               <th className={styles.title}>Nome do Aluno</th>
               <th className={`${styles.title} ${styles.center}`}>Notas e Faltas</th>
             </tr>

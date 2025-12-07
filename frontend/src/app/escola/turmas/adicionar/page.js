@@ -39,25 +39,25 @@ export default function Home() {
   const mostrarTurma = turma ?? {};
 
   const [formData, setFormData] = useState({
-    alunos: []
+    alunos_novos: []
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (alunosRef.current) {
-      formData.alunos = []; // limpa o array de alunos para pegar só os selecionados
+      formData.alunos_novos = []; // limpa o array de alunos para pegar só os selecionados
       const selected = alunosRef.current.selectedOptions;
 
       for (let i = 0; i < selected.length; i++) {
-        formData.alunos.push(selected[i].value);
+        formData.alunos_novos.push(selected[i].value);
       }
     }
 
     console.log(formData);
     const token = sessionStorage.getItem('access_token');
-    const resultado = await atualizarTurma(idTurma, turma, token);
-    if (resultado.status == 201) {
+    const resultado = await atualizarTurma(idTurma, formData, token);
+    if (resultado.status === 200) {
       alert('Alunos transferidos com sucesso!');
     } else { // 500 etc
       alert('Erro ao transferir alunos!');
@@ -71,8 +71,8 @@ export default function Home() {
         <h1>Turma {mostrarTurma.identificador} do {mostrarTurma.ano_escolar}º Ano</h1>
         <form className={styles.forms} onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="alunos">Selecione os alunos que deseja transferir para a <b>turma {mostrarTurma.identificador} do {mostrarTurma.anoEscolar}º Ano</b>:</label>
-            <select className={styles.field} name="alunos" ref={alunosRef} multiple>
+            <label htmlFor="alunos_novos">Selecione os alunos que deseja transferir para a <b>turma {mostrarTurma.identificador} do {mostrarTurma.anoEscolar}º Ano</b>:</label>
+            <select id="alunos_novos" className={styles.field} name="alunos_novos" ref={alunosRef} multiple>
               {mostrarAlunos.map(
                 (e) => (<option key={e.cpf} value={e.cpf}>{e.nome}</option>)
               )}

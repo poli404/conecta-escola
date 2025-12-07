@@ -72,7 +72,7 @@ export default function Page() {
       <div className={styles.container}>
         <h1>Seja bem-vindo ao Conecta Escola!</h1>
         <form className={styles.loginForm} onSubmit={handleSubmit}>
-          <input className={styles.field} id="username" type="email" placeholder="E-Mail" required/>
+          <input className={styles.field} id="username" type="text" placeholder="E-Mail/CPF" required/>
           <input className={styles.field} id="password" type="password" placeholder="Senha" required/>
           <button type="submit">Login</button>
           <a href="/escola">Esqueceu sua senha?</a>

@@ -59,18 +59,15 @@ export async function getDisciplinasTurma(idTurma) {
 
 export async function getDisciplina(idDisciplina) {
   try {
-    const resposta = await fetch(`http://localhost:8000/disciplina`, {
+    const resposta = await fetch(`http://localhost:8000/disciplina/${idDisciplina}`, {
       method: 'GET',
       headers: {'Content-Type' : "application/json"},
-      body: JSON.stringify(idDisciplina)
     });
 
-    if (resposta.status == 200) {
-      const dados = await resposta.json();
-      return dados;
-    } else {
-      return null;
-    }
+
+    const dados = await resposta.json();
+    console.log(dados);
+    return dados;
   } catch (erro) {
     console.error("Erro:", erro);
     return null;

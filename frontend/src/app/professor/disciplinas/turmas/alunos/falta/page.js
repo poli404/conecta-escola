@@ -15,7 +15,7 @@ export default function Home() {
     quantidade: '1',
     id_disciplina: '',
     id_aluno: idAluno,
-    justificada: 'false',
+    justificativa: 'false',
   });
 
   const handleSubmit = async (e) => {
@@ -50,8 +50,8 @@ export default function Home() {
             <input className={styles.field} type="date" id="data" name="data" value={formData.data} onChange={handleChange} required/>  
             <label htmlFor="quantidade">Quantidade de Faltas:</label>
             <input className={styles.field} type="number" id="quantidade" name="quantidade" value={formData.quantidade} onChange={handleChange} required/>
-            <label htmlFor="justificada">Falta Justificada?</label>
-            <select className={styles.field} id="justificada" name="justificada" value={formData.justificada} onChange={handleChange} required>
+            <label htmlFor="justificativa">Falta Justificada?</label>
+            <select className={styles.field} id="justificativa" name="justificativa" value={formData.justificativa} onChange={handleChange} required>
               <option value='true'>SIM</option>
               <option value='false'>NÃO</option>
             </select>

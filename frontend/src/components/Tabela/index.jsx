@@ -123,11 +123,10 @@ export const TabelasProfessor = ({ dados, tipo }) => {
         return(
             <tbody>
             {dados.map((dado) => (
-            <tr key={dado.id}>
-                <td className={styles.center}>{dado.id}</td>
+            <tr key={dado.cpf}>
                 <td className={styles.left}>{dado.nome}</td>
                 <td className={styles.center}>
-                    <Link className={styles.detalhes} href={`${tipo}/detalhes?idAluno=${dado.id}`}>
+                    <Link className={styles.detalhes} href={`${tipo}/detalhes?idAluno=${dado.cpf}`}>
                         <Image src={notes} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
                     </Link>
                 </td>

@@ -68,14 +68,18 @@ export async function getAlunosTurma(idTurma) {
   }
 }
 
-export async function getAluno(idAluno) {
-    const resposta = await fetch(`http://localhost:8000/aluno/${idAluno}`, {
+export async function getAluno(idAluno, autorizacao) {
+    const resposta = await fetch(`http://127.0.0.1:8000/aluno/${idAluno}`, {
         method: 'GET',
-        headers: {'Content-Type' : "application/json"}
+        headers: {
+        'accept' : 'application/json',
+        'Authorization' : `Bearer ${autorizacao}`,
+        'Content-Type' : "application/json"},
     });
 
+    const dados = await resposta.json();
+
     if (resposta.status === 200) {
-      const dados = await resposta.json();
       return dados;
     } else {
       alert("Aluno não encontrado!");
@@ -124,13 +128,14 @@ export async function atualizarAluno(idAluno, dados) {
 
 }
 
-export async function getNotas(idAluno) {
+export async function getNotas(idAluno, autorizacao) {
   try {
     const response = await fetch(`http://127.0.0.1:8000/nota/aluno/${idAluno}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }
+        'accept' : 'application/json',
+        'Authorization' : `Bearer ${autorizacao}`,
+        'Content-Type' : "application/json"},
     });
 
     if (response.status === 200) {

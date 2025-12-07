@@ -23,9 +23,10 @@ export default function Home() {
         })();
     }, []);
     
-    const mostrarTurmas = turmas ?? [];
-  //const turmas = [{id : 1, anoEscolar: '1', turma: 'A'}];
+  const mostrarTurmas = turmas ?? [];
 
+  sessionStorage.setItem('idDisciplina', idDisciplina);
+  
   return (
     <main>
       <MenuProfessor/>

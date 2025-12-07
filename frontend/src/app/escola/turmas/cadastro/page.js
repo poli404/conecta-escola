@@ -1,13 +1,14 @@
 'use client';
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./page.module.css";
 import { useState } from 'react';
-import { getTodosAlunosEscolaAnoEscolar } from "@/services/alunoService";
+import { getTodosAlunosEscola, getTodosAlunosEscolaAnoEscolar } from "@/services/alunoService";
 import { cadastrarTurma } from "@/services/turmaService";
 
 export default function Home() {
   const alunosRef = useRef();
-  let alunos = []; // inicia sem alunos -> esperar o ano escolar
+  const [alunos, setAlunos] = useState(null);
+  const [idEscola, setIdEscola] = useState(null);
   
   const [formData, setFormData] = useState({
     ano_escolar: '',
@@ -15,6 +16,22 @@ export default function Home() {
     alunos: [],
     id_escola: '',
   });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const idEscola = sessionStorage.getItem('idEscola');
+        setIdEscola(idEscola);
+        const dados = await getTodosAlunosEscola(idEscola);
+        setAlunos(dados);
+      } catch (err) {
+        console.error("Erro ao buscar alunos:", err);
+        setAlunos([]);
+      }
+    })();
+  }, []);
+
+  const mostrarAlunos = alunos ?? []
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,25 +45,18 @@ export default function Home() {
       }
     }
     const token = sessionStorage.getItem('access_token');
-    const idEscola = sessionStorage.getItem('idEscola');
     formData.id_escola = idEscola;
     const resultado = await cadastrarTurma(formData, token);
+    console.log(resultado);
     alert('Turma cadastrada!');
   };
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     setFormData({
       ...formData,
       [e.target.name] : e.target.value
     });
-
-    if (e.target.name === 'ano_escolar') {
-      const idEscola = sessionStorage.getItem('idEscola');
-      alunos = getTodosAlunosEscolaAnoEscolar(idEscola, formData.ano_escolar);
-    }
   };
-
-  console.log(formData);
 
   return (
     <main>
@@ -61,7 +71,7 @@ export default function Home() {
             <input className={styles.field} type="text" id="identificador" name="identificador" placeholder="A" value={formData.identificador} onChange={handleChange} required/>
             <label htmlFor="alunos">Adicione alunos à turma:</label>
             <select className={styles.field} name="alunos" ref={alunosRef} multiple>
-              {alunos.map(
+              {mostrarAlunos.map(
                 (e) => (<option key={e.cpf} value={e.cpf}>{e.nome}</option>)
               )}
             </select>

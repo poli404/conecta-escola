@@ -1,6 +1,6 @@
-export async function cadastrarFalta(formData, autorizacao) {
+export async function cadastrarNota(formData, autorizacao) {
     try {
-    const resposta = await fetch(`http://localhost:8000/falta`, {
+    const resposta = await fetch(`http://localhost:8000/nota`, {
       method: 'POST',
       headers: {
         'accept' : 'application/json',
