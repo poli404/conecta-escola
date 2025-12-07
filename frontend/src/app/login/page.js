@@ -27,6 +27,22 @@ async function verificarUsuario(email, password) {
 
 }
 
+async function getUsuario(email) {
+  const response = await fetch(`http://127.0.0.1:8000/login/usuario/${email}`, {
+    method: 'GET',
+    headers: {
+      'accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+
+  if (response.status === 200) {
+    const user = await response.json();
+    sessionStorage.setItem('idUsuario', user.id);
+    return user;
+  }
+}
+
 export default function Page() {
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,10 +51,19 @@ export default function Page() {
     if (resp) {
       const dominio = e.target.username.value.substring(e.target.username.value.indexOf('@')+1).split('.br')[0];
       const escola = 1 //await getEscola(dominio);
-
+      const user = await getUsuario(e.target.username.value);
       sessionStorage.setItem("idEscola", escola);
 
-      window.location.href = "/escola";
+      if (user.tipo === 'escola') {
+        window.location.href = "/escola";
+      } else if (user.tipo === 'professor') {
+        window.location.href = "/professor";
+      } else if (user.tipo === 'aluno') {
+        window.location.href = "/aluno";
+      } else if (user.tipo === 'responsavel') {
+        window.location.href = "/responsavel";
+      }
+      
     }
   }
 

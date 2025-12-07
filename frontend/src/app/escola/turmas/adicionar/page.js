@@ -1,30 +1,42 @@
 'use client';
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./page.module.css";
 import { useState } from 'react';
 import { useSearchParams } from "next/navigation";
-
-async function cadastrarEscola(dadosEscola) {
-  const response = await fetch('http://localhost:8000/escola/cadastro', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(dadosEscola)
-  });
-
-  return response;
-}
+import { atualizarTurma, getTurma } from "@/services/turmaService";
+import { getTodosAlunosEscola } from "@/services/alunoService";
 
 export default function Home() {
   const alunosRef = useRef();
   const searchParams = useSearchParams();
-
   const idTurma = searchParams.get("idTurma");
-  //const turma = getTurma(idTurma);
-  const turma = {id : 1, anoEscolar: 2, turma : "A", alunos: []};
-  //const alunos = getAlunosAnoEscolar(turma.anoEscolar);
-  const alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }];
+  const [turma, setTurma] = useState(null);
+  const [alunos, setAlunos] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const dados = await getTurma(idTurma);
+        setTurma(dados);
+      } catch (err) {
+        console.error("Erro ao buscar turma:", err);
+        setTurma([]);
+      }
+    })();
+    (async () => {
+      try {
+        const idEscola = sessionStorage.getItem('idEscola');
+        const dados = await getTodosAlunosEscola(idEscola);
+        setAlunos(dados);
+      } catch (err) {
+        console.error("Erro ao buscar alunos:", err);
+        setAlunos([]);
+      }
+    })();
+  }, []);
+
+  const mostrarAlunos = alunos ?? [];
+  const mostrarTurma = turma ?? {};
 
   const [formData, setFormData] = useState({
     alunos: []
@@ -43,7 +55,8 @@ export default function Home() {
     }
 
     console.log(formData);
-    //const resultado = await adicionarAlunosTurma(idTurma, turma);
+    const token = sessionStorage.getItem('access_token');
+    const resultado = await atualizarTurma(idTurma, turma, token);
     if (resultado.status == 201) {
       alert('Alunos transferidos com sucesso!');
     } else { // 500 etc
@@ -55,13 +68,13 @@ export default function Home() {
   return (
     <main>
       <div className={styles.container}>
-        <h1>Turma {turma.turma} do {turma.anoEscolar}º Ano</h1>
+        <h1>Turma {mostrarTurma.identificador} do {mostrarTurma.ano_escolar}º Ano</h1>
         <form className={styles.forms} onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="alunos">Selecione os alunos que deseja transferir para a <b>turma {turma.turma} do {turma.anoEscolar}º Ano</b>:</label>
+            <label htmlFor="alunos">Selecione os alunos que deseja transferir para a <b>turma {mostrarTurma.identificador} do {mostrarTurma.anoEscolar}º Ano</b>:</label>
             <select className={styles.field} name="alunos" ref={alunosRef} multiple>
-              {alunos.map(
-                (e) => (<option key={e.id} value={e.id}>{e.nome}</option>)
+              {mostrarAlunos.map(
+                (e) => (<option key={e.cpf} value={e.cpf}>{e.nome}</option>)
               )}
             </select>
           </div>

@@ -21,7 +21,7 @@ export async function getTodasDisciplinasEscola(idEscola) {
 
 export async function getDisciplinasProfessor(idProfessor) {
   try {
-    const resposta = await fetch(`http://localhost:8000/disciplina/prodessor/${idProfessor}`, {
+    const resposta = await fetch(`http://localhost:8000/disciplina/professor/${idProfessor}`, {
       method: 'GET',
       headers: {'Content-Type' : "application/json"}
     });

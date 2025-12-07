@@ -143,6 +143,11 @@ class TurmaCreateSchema(BaseModel):
 
     model_config = {"from_attributes": True}
 
+class TurmaUpdateSchema(BaseModel):
+    alunos_novos: list[str]
+
+    model_config = {"from_attributes": True}
+
 class TurmaResponseSchema(BaseModel):
     id: int
     ano_escolar: AnoEscolar

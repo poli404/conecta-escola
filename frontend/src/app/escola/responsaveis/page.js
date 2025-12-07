@@ -1,12 +1,32 @@
+'use client';
 import { MenuEscola } from "@/components/MenuEscola";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { TabelasEscola, BarraPesquisa } from "@/components/Tabela";
+import { getResponsaveisEscola } from "@/services/responsavelService";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  //const alunos = getAllAlunos();
-  const responsaveis = [{ id: 1, nome: "Sulema de Mello Amaro Policante", contato: '(44)999355633', aluno: ["Maria Eduarda de Mello Policante"] }]; // Dados simulados
+  const [idEscola, setIdEscola] = useState(null);
+  const [responsaveis, setResponsaveis] = useState(null);
+  
+  useEffect(() => {
+    const id = sessionStorage.getItem("idEscola");
+    setIdEscola(id);
 
+    (async () => {
+      try {
+        const dados = await getResponsaveisEscola(id);
+        setResponsaveis(dados);
+      } catch (err) {
+        console.error("Erro ao buscar professores:", err);
+        setResponsaveis([]);
+      }
+    })();
+  }, []);
+  
+  const mostrarResponsaveis = responsaveis ?? [];
+  
   return (
     <main>
       <MenuEscola/>
@@ -22,7 +42,7 @@ export default function Home() {
               <th></th>
             </tr>
           </thead>
-          <TabelasEscola dados={responsaveis} tipo={"responsaveis"}/>
+          <TabelasEscola dados={mostrarResponsaveis} tipo={"responsaveis"}/>
         </table>
       </div>
     </main>

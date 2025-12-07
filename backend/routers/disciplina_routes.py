@@ -43,6 +43,19 @@ def cadastrar_disciplina(disciplina: DisciplinaCreateSchema, db: Session = Depen
     return nova_disciplina
 
 
+@disciplina_router.get("/{id_disciplina}", response_model=DisciplinaResponseSchema)
+def buscar_disciplina(id_disciplina: int, db: Session = Depends(get_db)):
+    """
+    Busca uma disciplina específica por ID.
+    """
+    disciplina = db.query(Disciplina).options(joinedload(Disciplina.professor)).filter(Disciplina.id == id_disciplina).first()
+    
+    if not disciplina:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Disciplina não encontrada.")
+    
+    return disciplina
+
+
 @disciplina_router.post("/turma", response_model=TurmaDisciplinaResponseSchema, status_code=status.HTTP_201_CREATED)
 def associar_turma_disciplina(associacao: TurmaDisciplinaCreateSchema, db: Session = Depends(get_db), escola_autenticada: Escola = Depends(get_current_escola)):
     """

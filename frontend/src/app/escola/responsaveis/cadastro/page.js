@@ -18,7 +18,7 @@ export default function Home() {
       dataNasc: '',
       emailPessoal: '',
       estadoCivil: 'CASADO',
-      escola: '',
+      id_escola: '',
       senha: Math.random().toString(36).slice(-10)
   });
 
@@ -26,12 +26,12 @@ export default function Home() {
     e.preventDefault();
     try {
       const token = sessionStorage.getItem('access_token');
-      const escola = sessionStorage.getItem('idEscola');
-      formData.escola = escola;
+      const idEscola = sessionStorage.getItem('idEscola');
+      formData.id_escola = idEscola;
       const resultado = await cadastrarResponsavel(formData, token);
-      alert('Escola cadastrada com sucesso!');
+      alert(`Senha: ${formData.senha.toString()}`);
     } catch (erro) {
-      alert('Erro ao cadastrar escola');
+      alert('Erro ao cadastrar responsável');
     }
   };
 
@@ -54,9 +54,9 @@ export default function Home() {
             <input className={styles.field} type="text" id="nome" name="nome" value={formData.nome} onChange={handleChange} required/>
             <div className={styles.linha}>
               <label htmlFor="cpf">CPF:</label>
-              <input className={`${styles.field} ${styles.mini}`} type="text" id="cpf" name="cpf" placeholder="123.456.789-10" required/>
+              <input className={`${styles.field} ${styles.mini}`} type="text" id="cpf" name="cpf" placeholder="123.456.789-10" value={formData.cpf} onChange={handleChange} required/>
               <label htmlFor="rg">RG:</label>
-              <input className={`${styles.field} ${styles.mini}`} type="text" id="rg" name="rg" placeholder="12.345.678-9" required/>
+              <input className={`${styles.field} ${styles.mini}`} type="text" id="rg" name="rg" placeholder="12.345.678-9" value={formData.rg} onChange={handleChange} required/>
             </div>
             <div className={styles.linha}>
               <label htmlFor="genero">Gênero:</label>
@@ -75,10 +75,10 @@ export default function Home() {
               </select>
             </div>
             <label htmlFor="endereco">Endereço:</label>
-            <input className={styles.field} type="text" id="endereco" name="endereco" required/>
+            <input className={styles.field} type="text" id="endereco" name="endereco" value={formData.endereco} onChange={handleChange} required/>
             <div className={styles.linha}>
               <label htmlFor="cep">CEP:</label>
-              <input className={`${styles.field} ${styles.mini}`} type="text" id="cep" name="cep" placeholder="12345-678" required/>
+              <input className={`${styles.field} ${styles.mini}`} type="text" id="cep" name="cep" placeholder="12345-678" value={formData.cep} onChange={handleChange} required/>
               <label htmlFor="uf">UF:</label>
               <select id="uf" className={`${styles.field} ${styles.mini}`} name="uf" value={formData.uf} onChange={handleChange} required>
                 <option value="AC">AC</option>
@@ -111,19 +111,19 @@ export default function Home() {
               </select>
             </div>
             <label htmlFor="estadoCivil">Estado Civil:</label>
-            <select className={styles.field} name="estadoCivil">
-              <option>Casada(o)</option>
-              <option>Divorciada(o)</option>
-              <option>Solteira(o)</option>
-              <option>Viúva(o)</option>
+            <select className={styles.field} name="estadoCivil" value={formData.estadoCivil} onChange={handleChange}>
+              <option value="CASADO">Casada(o)</option>
+              <option value="DIVORCIADO">Divorciada(o)</option>
+              <option value="SOLTEIRO">Solteira(o)</option>
+              <option value="VIUVO">Viúva(o)</option>
             </select>
             <label htmlFor="dataNasc">Data de Nascimento:</label>
             <input className={styles.field} type="date" id="dataNasc" name="dataNasc" onChange={handleChange} required/>
             <div className={styles.linha}>
               <label htmlFor="emailPessoal">Email:</label>
-              <input className={`${styles.field} ${styles.mini}`} type="email" id="emailPessoal" name="emailPessoal" placeholder="nome@gmail.com" required/>
+              <input className={`${styles.field} ${styles.mini}`} type="email" id="emailPessoal" name="emailPessoal" placeholder="nome@gmail.com" value={formData.emailPessoal} onChange={handleChange} required/>
               <label htmlFor="telefone">Telefone:</label>
-              <input className={`${styles.field} ${styles.mini}`} type="tel" id="telefone" name="telefone" placeholder="(99) 99999-9999" required/>
+              <input className={`${styles.field} ${styles.mini}`} type="tel" id="telefone" name="telefone" placeholder="(99) 99999-9999" value={formData.telefone} onChange={handleChange} required/>
             </div>
           </div>
           <button type="submit">Cadastrar Resposável</button>

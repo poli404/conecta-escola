@@ -1,12 +1,30 @@
+'use client';
 import { MenuProfessor } from "@/components/MenuProfessor";
-import Link from "next/link";
 import styles from "./page.module.css";
-import { TabelasEscola, BarraPesquisa, TabelasProfessor } from "@/components/Tabela";
+import { BarraPesquisa, TabelasProfessor } from "@/components/Tabela";
 import { getTurmasDisciplina } from "@/services/turmaService";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  // const turmas = getTurmasDisciplina(idDisciplina);
-  const turmas = [{id : 1, anoEscolar: '1º ano', turma: 'A'}];
+  const searchParams = useSearchParams();
+  const idDisciplina = searchParams.get("idDisciplina");
+  const [turmas, setTurmas] = useState(null);
+  
+  useEffect(() => {
+    (async () => {
+          try {
+            const dados = await getTurmasDisciplina(idDisciplina);
+            setTurmas(dados);
+          } catch (err) {
+            console.error("Erro ao buscar disciplinas:", err);
+            setTurmas([]);
+          }
+        })();
+    }, []);
+    
+    const mostrarTurmas = turmas ?? [];
+  //const turmas = [{id : 1, anoEscolar: '1', turma: 'A'}];
 
   return (
     <main>
@@ -22,7 +40,7 @@ export default function Home() {
                 <th></th>
                 </tr>
             </thead>
-            <TabelasProfessor dados={turmas} tipo={"turmas"}/>
+            <TabelasProfessor dados={mostrarTurmas} tipo={"turmas"}/>
             </table>
       </div>
     </main>

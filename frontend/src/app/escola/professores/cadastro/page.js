@@ -3,12 +3,8 @@ import { useState } from 'react';
 import { MenuEscola } from "@/components/MenuEscola";
 import styles from "./page.module.css";
 import { cadastrarProfessor } from '@/services/professorService';
-import { getTodasDisciplinasEscola } from '@/services/disciplinaService';
 
 export default function Home() {
-  const idEscola = 1;//sessionStorage.getItem('idEscola');
-  //const disciplinas = getTodasDisciplinasEscola(idEscola);
-  
   const [formData, setFormData] = useState({
       nome: '',
       cpf: '',
@@ -21,7 +17,7 @@ export default function Home() {
       dataNasc: '',
       telefone: '',
       emailPessoal: '',
-      id_escola: idEscola,
+      id_escola: '',
       graduacao: '',
       cargaHoraria: 40,
       disciplinas: [],
@@ -31,12 +27,10 @@ export default function Home() {
     const handleSubmit = async (e) => {
       e.preventDefault();
       const token = sessionStorage.getItem('access_token');
+      const idEscola = sessionStorage.getItem('idEscola');
+      formData.id_escola = idEscola;
       const resultado = await cadastrarProfessor(formData, token);
-      if (resultado.status === 201) {
-        alert('Professor cadastrado com sucesso!');
-      } else {
-        alert('Erro ao cadastrar professor');
-      }
+      alert(`Professor cadastrado com sucesso! Senha: ${formData.senha}`);
     };
   
     const handleChange = (e) => {
@@ -49,7 +43,7 @@ export default function Home() {
   return (
     <main>
       <MenuEscola/>
-            <div className={styles.container}>
+        <div className={styles.container}>
         <h1>Cadastro de Novo Professor</h1>
         <form className={styles.forms} onSubmit={handleSubmit}>
           <div>
@@ -124,16 +118,6 @@ export default function Home() {
             <h3 className={styles.title}>Informações Profissionais</h3>
             <label htmlFor="graduacao">Formação Acadêmica:</label>
             <input className={styles.field} type="text" id="graduacao" name="graduacao" placeholder="Licenciatura em Matemática" value={formData.graduacao} onChange={handleChange} required/>
-            <label htmlFor="disciplinas">Disciplinas Lecionadas:</label>
-            <select id="disciplinas" className={styles.field} name="disciplinas" value={formData.disciplinas} onChange={handleChange} multiple>
-              <option value="matematica">Matemática</option>
-              <option value="portugues">Português</option>
-              <option value="ciencias">Ciências</option>
-              <option value="historia">História</option>
-              <option value="geografia">Geografia</option>
-              <option value="ingles">Inglês</option>
-              <option value="educacaoFisica">Educação Física</option>
-            </select>
           </div>
           <button type="submit">Cadastrar Professor</button>
         </form>

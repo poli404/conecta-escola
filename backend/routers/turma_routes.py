@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 from datetime import date
 
-from database.schemas import TurmaCreateSchema, TurmaResponseSchema
+from database.schemas import TurmaCreateSchema, TurmaUpdateSchema, TurmaResponseSchema
 from database.dependencies import get_db
 from database.models import Turma, Escola, Aluno, Disciplina, AlunoTurma, TurmaDisciplina
 from routers.security import get_current_escola
@@ -125,3 +125,36 @@ def listar_turmas_por_escola(id_escola: int, db: Session = Depends(get_db)):
     if not turmas:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhuma turma encontrada para esta escola.")
     return turmas
+
+
+@turma_router.put("/{id_turma}/alunos", response_model=TurmaResponseSchema)
+def atualizar_turma(id_turma: int, dados: TurmaUpdateSchema, db: Session = Depends(get_db), escola: Escola = Depends(get_current_escola)):
+    """
+    Permite a inclusão de novos alunos em uma turma já criada.
+    """
+    turma = db.query(Turma).filter(Turma.id == id_turma).first()
+    
+    if not turma:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Turma não encontrada.")
+
+    data = date.today()
+
+    for cpf in dados.alunos_novos:
+        aluno = db.query(Aluno).filter(Aluno.cpf == cpf, Aluno.idEscola == escola.id).first()
+
+        if not aluno:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Aluno(a) com CPF {cpf} não encontrado.")
+
+        matricula_existente = db.query(AlunoTurma).filter(AlunoTurma.idTurma == turma.id, AlunoTurma.idAluno == aluno.cpf).first()
+
+        if not matricula_existente:  # se o aluno já não estava na turma, pode ser adicionado
+            nova_matricula = AlunoTurma(data_matricula=data)
+            nova_matricula.aluno = aluno
+            nova_matricula.turma = turma
+            db.add(nova_matricula)
+
+    db.commit()
+
+    turma_atualizada = db.query(Turma).options(joinedload(Turma.escola), joinedload(Turma.alunos_turma).joinedload(AlunoTurma.aluno)).filter(Turma.id == id_turma).first()
+    
+    return turma_atualizada

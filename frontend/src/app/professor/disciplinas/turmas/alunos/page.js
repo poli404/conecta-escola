@@ -1,12 +1,30 @@
+'use client';
 import { MenuProfessor } from "@/components/MenuProfessor";
-import Link from "next/link";
 import styles from "./page.module.css";
-import { TabelasEscola, BarraPesquisa, TabelasProfessor } from "@/components/Tabela";
+import { BarraPesquisa, TabelasProfessor } from "@/components/Tabela";
 import { getAlunosTurma } from "@/services/alunoService";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
-  //const Aalunos = getAlunosTurma(idTurma);
-  const alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }]; // Dados simulados
+  const searchParams = useSearchParams();
+  const idTurma = searchParams.get("idTurma");
+  const [alunos, setAlunos] = useState(null);
+    
+  useEffect(() => {
+    (async () => {
+          try {
+            const dados = await getAlunosTurma(idTurma);
+            setAlunos(dados);
+          } catch (err) {
+            console.error("Erro ao buscar alunos:", err);
+            setAlunos([]);
+          }
+        })();
+    }, []);
+    
+  const mostrarAlunos = alunos ?? [];
+  //const alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }]; // Dados simulados
 
   return (
     <main>
@@ -21,7 +39,7 @@ export default function Home() {
               <th className={`${styles.title} ${styles.center}`}>Notas e Faltas</th>
             </tr>
           </thead>
-          <TabelasProfessor dados={alunos} tipo={"alunos"}/>
+          <TabelasProfessor dados={mostrarAlunos} tipo={"alunos"}/>
         </table>
       </div>
     </main>

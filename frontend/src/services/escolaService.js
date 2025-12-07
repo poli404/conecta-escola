@@ -1,5 +1,5 @@
 export async function cadastrarEscola(dadosEscola) {
-  const response = await fetch('http://localhost:8000/escola/cadastro', {
+  const response = await fetch('http://127.0.0.1:8000/escola/cadastro', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -7,6 +7,7 @@ export async function cadastrarEscola(dadosEscola) {
     body: JSON.stringify(dadosEscola)
   });
   const dados = await response.json();
+  console.log(dados);
   return dados;
 }
 

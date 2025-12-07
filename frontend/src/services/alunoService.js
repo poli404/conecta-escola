@@ -5,12 +5,9 @@ export async function getTodosAlunosEscola(idEscola) {
       headers: {'Content-Type' : "application/json"}
     });
 
-    if (resposta.status == 200) {
-      const dados = await resposta.json();
-      return dados;
-    } else {
-      return null;
-    }
+
+    const dados = await resposta.json();
+    return dados;
   } catch (erro) {
     console.error("Erro:", erro);
     return null;
@@ -24,12 +21,9 @@ export async function getTodosAlunosEscolaAnoEscolar(idEscola, anoEscolar) {
       headers: {'Content-Type' : "application/json"}
     });
 
-    if (resposta.status == 200) {
-      const dados = await resposta.json();
-      return dados;
-    } else {
-      return null;
-    }
+    const dados = await resposta.json();
+    console.log(dados);
+    return dados;
   } catch (erro) {
     console.error("Erro:", erro);
     return null;
@@ -88,20 +82,20 @@ export async function getAluno(idAluno) {
     }
 }
 
-export async function cadastrarAluno(dados) {
+export async function cadastrarAluno(dados, autorizacao) {
   try {
     const resposta = await fetch(`http://localhost:8000/aluno/cadastro`, {
       method: 'POST',
-      headers: {'Content-Type' : "application/json"},
+      headers: {
+        'accept' : 'application/json',
+        'Authorization' : `Bearer ${autorizacao}`,
+        'Content-Type' : "application/json"},
       body: JSON.stringify(dados)
     });
 
-    if (resposta.status == 201) {
-      const dados = await resposta.json();
-      return dados;
-    } else {
-      return null;
-    }
+
+    const data = await resposta.json();
+    return data;
   } catch (erro) {
     console.error("Erro:", erro);
     return null;
