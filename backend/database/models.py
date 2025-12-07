@@ -169,7 +169,7 @@ class Disciplina(Base):
     professor = relationship("Professor", back_populates="disciplinas")
     notas = relationship("Nota", back_populates="disciplina")
     turmas_disciplina = relationship("TurmaDisciplina", back_populates="disciplina")
-    faltas = relationship("Falta", back_populates="disciplinas")
+    faltas = relationship("Falta", back_populates="disciplina")
 
     def __init__(self, descricao, professor):
         self.descricao = descricao
