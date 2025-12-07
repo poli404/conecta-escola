@@ -163,11 +163,12 @@ class Disciplina(Base):
     id = Column("id", Integer, primary_key=True, autoincrement=True)
     descricao = Column("descricao", String(255), nullable=False)
 
-    # relacionamento com professor e nota
+    # relacionamento com professor, nota e falta
     idProfessor = Column("id_professor", String(11), ForeignKey("professores.cpf"), nullable=False)
     professor = relationship("Professor", back_populates="disciplinas")
     notas = relationship("Nota", back_populates="disciplina")
     turmas_disciplina = relationship("TurmaDisciplina", back_populates="disciplina")
+    faltas = relationship("Falta", back_populates="disciplinas")
 
     def __init__(self, descricao, professor):
         self.descricao = descricao
@@ -237,5 +238,26 @@ class TurmaDisciplina(Base):
 
     def __init__(self, ano_letivo):
         self.ano_letivo = ano_letivo
+
+
+class Falta(Base):
+    __tablename__ = "faltas"
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    data = Column("data", Date, nullable=False)
+    justificada = Column("justificada", Boolean, default=False)
+    quantidade = Column("justificada", Integer)
+
+    # relacionamento com aluno e disciplina
+    idAluno = Column("id_aluno", String(11), ForeignKey("alunos.cpf"), nullable=False)
+    aluno = relationship("Aluno")  # talvez precise de backref
+    idDisciplina = Column("id_disciplina", Integer, ForeignKey("disciplinas.id"), nullable=False)
+    disciplina = relationship("Disciplina", back_populates="faltas")
+
+    def __init__(self, data, quantidade, aluno, disciplina):
+        self.data = data
+        self.quantidade = quantidade
+        self.aluno = aluno
+        self.disciplina = disciplina
+
 
 Base.metadata.create_all(bind=db)

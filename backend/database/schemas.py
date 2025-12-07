@@ -1,6 +1,5 @@
 from __future__ import annotations
 from pydantic import BaseModel
-# from pydantic import EmailStr
 from typing import Optional
 from datetime import date
 from database.enums import *
@@ -216,6 +215,34 @@ class TurmaDisciplinaResponseSchema(BaseModel):
     disciplina: DisciplinaResponseSchema
 
     model_config = {"from_attributes": True}
+
+
+class FaltaCreateSchema(BaseModel):
+    data: date
+    quantidade: int
+    id_aluno: str
+    id_disciplina: str
+
+    model_config = {"from_attributes": True}
+
+class FaltaUpdateSchema(BaseModel):
+    justificada: bool
+
+    model_config = {"from_attributes": True}
+
+class FaltaResponseSchema(BaseModel):
+    id: int
+    data: date
+    quantidade: int
+    justificativa: bool
+    aluno: AlunoBaseResponse
+    disciplina: DisciplinaResponseSchema
+
+# --- Dashboards ---
+
+# RankingAlunoFaltaSchema
+
+# RankingTurmaFaltaSchema
 
 
 AlunoResponseSchema.model_rebuild()
