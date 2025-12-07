@@ -2,9 +2,11 @@ import { MenuEscola } from "@/components/MenuEscola";
 import { CorpoTabela, BarraPesquisa } from "@/components/Tabela";
 import Link from "next/link";
 import styles from "./page.module.css";
+import { getTodosProfessoresEscola } from "@/services/professorService";
 
 export default function Home() {
-  //const professores = getAllProfessores();
+  idEscola = sessionStorage.getItem("idEscola");
+  //const professores = getTodosProfessoresEscola(idEscola);
   const professores = [{ id: 1, nome: "Dante Medeiros Filho" }, { id: 2, nome: "Aline Maria Malachini Miotto Amaral" }]; // Dados simulados
   
   return (

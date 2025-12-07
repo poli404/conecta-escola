@@ -89,3 +89,22 @@ export async function cadastrarDisciplina(formData) {
     return null;
   }
 }
+
+export async function atualizarDisciplina(idDisciplina, formData) {
+    try {
+    const resposta = await fetch(`https://localhost:8000/disciplina/atualizar/${idDisciplina}`, {
+      method: 'PUT',
+      headers: {'Content-Type' : "application/json"},
+      body: JSON.stringify(formData)
+    });
+
+    if (resposta.status == 203) {
+      return resposta.json();
+    } else {
+      return null;
+    }
+  } catch (erro) {
+    console.error("Erro:", erro);
+    return null;
+  }
+}

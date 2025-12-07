@@ -46,7 +46,7 @@ export default function Home() {
   return (
     <main>
       <MenuEscola/>
-            <div className={styles.container}>
+      <div className={styles.container}>
         <h1>Cadastro de Novo Aluno</h1>
         <form className={styles.forms} onSubmit={handleSubmit}>
           <div>
