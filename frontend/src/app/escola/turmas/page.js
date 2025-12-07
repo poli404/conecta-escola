@@ -26,7 +26,6 @@ export default function Home() {
   }, []);
   
   const mostrarTurmas = turmas ?? [];
-  //const turmas = [{id : 1, anoEscolar: '1º ano', turma: 'A'}];
 
   return (
     <main>

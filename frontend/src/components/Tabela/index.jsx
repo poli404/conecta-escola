@@ -27,7 +27,7 @@ export const TabelasEscola = ({ dados, tipo }) => {
             {dados.map((dado) => (
             <tr key={dado.id}>
                 <td className={styles.center}>{dado.id}</td>
-                <td className={styles.left}>{`${dado.anoEscolar}º ano`}</td>
+                <td className={styles.left}>{`${dado.ano_escolar}º ano`}</td>
                 <td className={styles.center}>{dado.identificador}</td>
                 <td className={styles.center}>
                     <Link className={styles.detalhes} href={`${tipo}/detalhes?id=${dado.id}`}>
@@ -58,12 +58,10 @@ export const TabelasEscola = ({ dados, tipo }) => {
         return (
         <tbody>
             {dados.map((dado) => (
-            <tr key={dado.id}>
+            <tr key={dado.cpf}>
                 <td className={styles.left}>{dado.nome}</td>
-                <td className={styles.left}>
-                    <Link className={styles.text} href={`${tipo}/perfil?id=${dado.id}`}>{dado.aluno}</Link>
-                </td>
-                <td className={styles.left}>{dado.contato}</td>
+                <td className={styles.left}>{dado.aluno}</td>
+                <td className={styles.left}>{dado.emailPessoal}</td>
                 <td className={styles.center}>
                     <Link className={styles.detalhes} href={`${tipo}/perfil?id=${dado.id}`}>
                         <Image src={eye} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
@@ -112,7 +110,7 @@ export const TabelasProfessor = ({ dados, tipo }) => {
             {dados.map((dado) => (
             <tr key={dado.id}>
                 <td className={styles.center}>{dado.id}</td>
-                <td className={styles.center}>{dado.anoEscolar}</td>
+                <td className={styles.center}>{`${dado.ano_escolar}º ano`}</td>
                 <td className={styles.center}>{dado.identificador}</td>
                 <td className={styles.center}>
                     <Link className={styles.destaque} href={`${tipo}/alunos?idTurma=${dado.id}`}>Ver Alunos</Link>

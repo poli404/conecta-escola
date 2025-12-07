@@ -57,7 +57,7 @@ export async function getResponsavel(idResponsavel) {
 
 export async function cadastrarResponsavel(dados, autorizacao) {
   try {
-    const resposta = await fetch(`http://localhost:8000/responsavel/cadastro`, {
+    const resposta = await fetch(`http://127.0.0.1:8000/responsavel/cadastro`, {
       method: 'POST',
       headers: {
         'accept' : 'application/json',

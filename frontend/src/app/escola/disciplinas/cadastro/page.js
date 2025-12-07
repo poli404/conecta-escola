@@ -23,7 +23,7 @@ export default function Home() {
       })();
     }, []);
   
-    const mostrarProfessores = professores ?? [];
+  const mostrarProfessores = professores ?? [];
 
   const [formData, setFormData] = useState({
     descricao: '',
@@ -34,11 +34,7 @@ export default function Home() {
     e.preventDefault();
     const token = sessionStorage.getItem('access_token');
     const resultado = await cadastrarDisciplina(formData, token);
-    if (resultado.status === 201) {
-      alert("Disciplina cadastrada com sucesso!");
-    } else {
-      alert("Erro ao cadastrar disciplina!");
-    }
+    alert("Disciplina cadastrada com sucesso!");
   };
 
   const handleChange = (e) => {

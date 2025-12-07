@@ -1,12 +1,30 @@
+'use client';
 import { MenuProfessor } from "@/components/MenuProfessor";
-import Link from "next/link";
 import styles from "./page.module.css";
 import { TabelasEscola, BarraPesquisa, TabelasProfessor } from "@/components/Tabela";
 import { getDisciplinasProfessor } from "@/services/disciplinaService";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  //const disciplinas = getDisciplinasProfessor(idProfessor);
-  const disciplinas = [{id : 1, nome: 'Matemática', descricao : "algo"}];
+  const [idProfessor, setIdProfessor] = useState(null);
+  const [disciplinas, setDisciplinas] = useState(null);
+
+  useEffect(() => {
+    const id = sessionStorage.getItem("idUsuario");
+    setIdProfessor(id);
+
+    (async () => {
+          try {
+            const dados = await getDisciplinasProfessor(id);
+            setDisciplinas(dados);
+          } catch (err) {
+            console.error("Erro ao buscar disciplinas:", err);
+            setDisciplinas([]);
+          }
+        })();
+    }, []);
+  
+  const mostrarDisciplinas = disciplinas ?? [];
 
   return (
     <main>
@@ -21,7 +39,7 @@ export default function Home() {
               <th></th>
             </tr>
           </thead>
-          <TabelasProfessor dados={disciplinas} tipo="disciplinas"/>
+          <TabelasProfessor dados={mostrarDisciplinas} tipo="disciplinas"/>
         </table>
       </div>
     </main>
