@@ -23,7 +23,7 @@ export default function Home() {
 
     const resultado = await cadastrarNota(formData, token);
     if (resultado.status === 201) {
-      alert("Falta cadastrada com sucesso!");
+      alert("Nota cadastrada com sucesso!");
     } else {
       alert("Erro ao cadastrar disciplina!");
     }

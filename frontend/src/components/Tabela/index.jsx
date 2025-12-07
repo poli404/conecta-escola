@@ -142,7 +142,7 @@ export const TabelasProfessor = ({ dados, tipo }) => {
                 <td className={styles.center}>{dado.data}</td>
                 <td className={styles.center}>{dado.valor}</td>
                 <td className={styles.center}>
-                    <Link className={styles.destaque} href={`${tipo}?id=${dado.id}`}>Alterar Nota</Link>
+                    <Link className={styles.destaque} href={`${tipo}/nota/alterar?idNota=${nota.id}`}>Alterar Nota</Link>
                 </td>
             </tr>
             ))}
