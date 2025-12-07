@@ -168,7 +168,7 @@ class AlunoTurmaResponseSchema(BaseModel):
 
 
 class DisciplinaCreateSchema(BaseModel):
-    descricao: str
+    descricao: str # Nome da disciplina (ex: "Matemática", "Português")
     id_professor: str
 
     model_config = {"from_attributes": True}
