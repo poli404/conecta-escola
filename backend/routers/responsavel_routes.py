@@ -43,7 +43,7 @@ def cadastrar_responsavel(responsavel: ResponsavelCreateSchema, db: Session = De
         aluno = db.query(Aluno).filter(Aluno.cpf == responsavel.id_aluno).first()
     
     hashed_password = get_password_hash(responsavel.senha)
-    novo_responsavel = Responsavel(**responsavel.model_dump(exclude={"senha", "id_aluno"}), senha=hashed_password, aluno=aluno, escola=escola)
+    novo_responsavel = Responsavel(**responsavel.model_dump(exclude={"senha", "id_aluno", "id_escola"}), senha=hashed_password, aluno=aluno, escola=escola)
     
     db.add(novo_responsavel)
     db.commit()

@@ -32,7 +32,7 @@ async def login_usuarios(form_data: OAuth2PasswordRequestForm = Depends(), db: S
     if not user:
         user = db.query(Professor).filter(Professor.emailEscolar == email).first()
     if not user:
-        user = db.query(Responsavel).filter(Responsavel.emailEscolar == email).first()
+        user = db.query(Responsavel).filter(Responsavel.emailPessoal == email).first()
 
     if not user or not verify_password(senha, user.senha):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="E-mail ou senha incorretos", headers={"WWW-Authenticate": "Bearer"})
