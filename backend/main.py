@@ -12,9 +12,7 @@ from routers.responsavel_routes import responsavel_router
 from routers.turma_routes import turma_router
 from routers.disciplina_routes import disciplina_router
 from routers.nota_routes import nota_router
-
-# ainda nao terminei essas - assinado AP
-#from routers.falta_routes import falta_router
+from routers.falta_routes import falta_router
 
 origins = [
 	"http://localhost:3000",
@@ -38,4 +36,4 @@ app.include_router(responsavel_router)
 app.include_router(turma_router)
 app.include_router(disciplina_router)
 app.include_router(nota_router)
-#app.include_router(falta_router)
+app.include_router(falta_router)

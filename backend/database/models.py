@@ -246,13 +246,13 @@ class Falta(Base):
     id = Column("id", Integer, primary_key=True, autoincrement=True)
     data = Column("data", Date, nullable=False)
     justificada = Column("justificada", Boolean, default=False)
-    quantidade = Column("justificada", Integer)
+    quantidade = Column("quantidade", Integer)
 
     # relacionamento com aluno e disciplina
     idAluno = Column("id_aluno", String(11), ForeignKey("alunos.cpf"), nullable=False)
-    aluno = relationship("Aluno")  # talvez precise de backref
+    aluno = relationship("Aluno", backref="faltas_lista")
     idDisciplina = Column("id_disciplina", Integer, ForeignKey("disciplinas.id"), nullable=False)
-    disciplina = relationship("Disciplina", back_populates="faltas")
+    disciplina = relationship("Disciplina", back_populates="faltas", backref="faltas_lista")
 
     def __init__(self, data, quantidade, aluno, disciplina):
         self.data = data

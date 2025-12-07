@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 from database.dependencies import get_db
 from database.models import Escola, Professor, Responsavel
-from database.schemas import EscolaResponseSchema
 from routers.security import verify_password, create_access_token
 
 login_router = APIRouter(prefix="/login", tags=["login"])

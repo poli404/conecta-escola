@@ -19,7 +19,7 @@ class EscolaResponseSchema(BaseModel):
     cnpj: str
     endereco: str
     dominio: str
-    email: str  # email: EmailStr 
+    email: str
 
     model_config = {"from_attributes": True}
 
@@ -237,12 +237,6 @@ class FaltaResponseSchema(BaseModel):
     justificativa: bool
     aluno: AlunoBaseResponse
     disciplina: DisciplinaResponseSchema
-
-# --- Dashboards ---
-
-# RankingAlunoFaltaSchema
-
-# RankingTurmaFaltaSchema
 
 
 AlunoResponseSchema.model_rebuild()
