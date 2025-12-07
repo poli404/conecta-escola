@@ -7,8 +7,8 @@ import { cadastrarTurma } from "@/services/turmaService";
 
 export default function Home() {
   const alunosRef = useRef();
-  const alunos = []; // inicia sem alunos -> esperar o ano escolar
-  alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }];
+  let alunos = []; // inicia sem alunos -> esperar o ano escolar
+  //alunos = [{ id: 1, nome: "Maria Eduarda de Mello Policante", anoEscolar: 3 }, { id: 2, nome: "Ana Paula Loureiro Crippa", anoEscolar: 2 }];
 
   const [formData, setFormData] = useState({
     anoEscolar: '',
@@ -37,7 +37,7 @@ export default function Home() {
     });
 
     if (e.target.name === 'anoEscolar') {
-      const alunos = getTodosAlunosEscolaAnoEscolar(idEscola, formData.anoEscolar);
+      alunos = getTodosAlunosEscolaAnoEscolar(idEscola, formData.anoEscolar);
     }
   };
 

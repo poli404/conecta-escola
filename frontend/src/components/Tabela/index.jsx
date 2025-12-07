@@ -100,7 +100,7 @@ export const TabelasProfessor = ({ dados, tipo }) => {
                     <td className={styles.center}>{dado.id}</td>
                     <td className={styles.left}>{dado.descricao}</td>
                     <td className={styles.center}>
-                        <Link className={styles.destaque} href={`${tipo}/turmas?id=${dado.id}`}>Ver Turmas</Link>
+                        <Link className={styles.destaque} href={`${tipo}/turmas?idDisciplina=${dado.id}`}>Ver Turmas</Link>
                     </td>
                 </tr>
                 ))}
@@ -112,12 +112,10 @@ export const TabelasProfessor = ({ dados, tipo }) => {
             {dados.map((dado) => (
             <tr key={dado.id}>
                 <td className={styles.center}>{dado.id}</td>
-                <td className={styles.left}>
-                    <Link className={styles.text} href={`${tipo}?${dado.id}`}>{dado.anoEscolar}</Link>
-                </td>
-                <td className={styles.center}>{dado.turma}</td>
+                <td className={styles.center}>{dado.anoEscolar}</td>
+                <td className={styles.center}>{dado.identificador}</td>
                 <td className={styles.center}>
-                    <Link className={styles.destaque} href={`${tipo}/alunos?id=${dado.id}`}>Ver Alunos</Link>
+                    <Link className={styles.destaque} href={`${tipo}/alunos?idTurma=${dado.id}`}>Ver Alunos</Link>
                 </td>
             </tr>
             ))}
@@ -131,7 +129,7 @@ export const TabelasProfessor = ({ dados, tipo }) => {
                 <td className={styles.center}>{dado.id}</td>
                 <td className={styles.left}>{dado.nome}</td>
                 <td className={styles.center}>
-                    <Link className={styles.detalhes} href={`${tipo}/detalhes?id=${dado.id}`}>
+                    <Link className={styles.detalhes} href={`${tipo}/detalhes?idAluno=${dado.id}`}>
                         <Image src={notes} width="20" height="20" alt="Ver Detalhes" title="Ver Detalhes"/>
                     </Link>
                 </td>
@@ -145,8 +143,7 @@ export const TabelasProfessor = ({ dados, tipo }) => {
             {dados.map((dado) => (
             <tr key={dado.id}>
                 <td className={styles.center}>{dado.data}</td>
-                <td className={styles.center}>
-                    {dado.nota}</td>
+                <td className={styles.center}>{dado.valor}</td>
                 <td className={styles.center}>
                     <Link className={styles.destaque} href={`${tipo}?id=${dado.id}`}>Alterar Nota</Link>
                 </td>

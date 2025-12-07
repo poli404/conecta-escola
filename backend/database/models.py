@@ -255,7 +255,7 @@ class Falta(Base):
     idAluno = Column("id_aluno", String(11), ForeignKey("alunos.cpf"), nullable=False)
     aluno = relationship("Aluno", backref="faltas_lista")
     idDisciplina = Column("id_disciplina", Integer, ForeignKey("disciplinas.id"), nullable=False)
-    disciplina = relationship("Disciplina", back_populates="faltas", backref="faltas_lista")
+    disciplina = relationship("Disciplina", back_populates="faltas")
 
     def __init__(self, data, quantidade, aluno, disciplina):
         self.data = data

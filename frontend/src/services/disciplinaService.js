@@ -89,7 +89,6 @@ export async function cadastrarDisciplina(formData, autorizacao) {
     });
 
     const dados = await resposta.json();
-    console.log(dados);
     return dados;
   } catch (erro) {
     console.error("Erro:", erro);

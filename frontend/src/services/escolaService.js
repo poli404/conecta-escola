@@ -6,8 +6,7 @@ export async function cadastrarEscola(dadosEscola) {
     },
     body: JSON.stringify(dadosEscola)
   });
-  console.log('Response status:', response.json());
-  const dados = await resposta.json();
+  const dados = await response.json();
   return dados;
 }
 

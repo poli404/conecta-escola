@@ -1,8 +1,13 @@
+'use client';
 import { MenuProfessor } from "@/components/MenuProfessor";
 import styles from "./page.module.css";
 import { TabelasEscola, TabelasProfessor } from "@/components/Tabela";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
+  const searchParams = useSearchParams('idAluno');
+  const idAluno = searchParams.get('idAluno');
   //const notas = getNotas(idAluno);
   //const faltas = getFaltas(idAluno);
   //const aluno = getNomeAluno(idAluno);
@@ -15,7 +20,8 @@ export default function Home() {
       <MenuProfessor/>
       <h3 className={styles.aluno}><b>Aluno:</b> {aluno}</h3>
       <div className={styles.container}>
-          <table className={styles.table} id="tabelaNotas">
+          <div>
+            <table className={styles.table} id="tabelaNotas">
             <caption className={styles.title}>Notas</caption>
             <thead>
             <tr>
@@ -26,8 +32,10 @@ export default function Home() {
             </thead>
             <TabelasProfessor dados={notas} tipo={"detalhes"}/>
           </table>
-          <button>Adicionar Nota</button>
-          <table className={styles.table} id="tabelaFaltas">
+          <Link className={styles.fakeButton} href={`nota?idAluno=${idAluno}`}>Adicionar Nota</Link>
+          </div>
+          <div>
+            <table className={styles.table} id="tabelaFaltas">
             <caption className={styles.title}>Faltas</caption>
             <thead>
               <tr>
@@ -37,7 +45,8 @@ export default function Home() {
               </thead>
               <TabelasProfessor dados={faltas} tipo={"faltas"}/>
           </table>
-          <button>Adicionar Falta</button>
+          <Link className={styles.fakeButton} href={`falta?idAluno=${idAluno}`}>Adicionar Falta</Link>
+          </div>
       </div>
     </main>
   );

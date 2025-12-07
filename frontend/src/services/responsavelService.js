@@ -55,20 +55,20 @@ export async function getResponsavel(idResponsavel) {
   }
 }
 
-export async function cadastrarResponsavel(dados) {
+export async function cadastrarResponsavel(dados, autorizacao) {
   try {
     const resposta = await fetch(`http://localhost:8000/responsavel/cadastro`, {
       method: 'POST',
-      headers: {'Content-Type' : "application/json"},
+      headers: {
+        'accept' : 'application/json',
+        'Authorization' : `Bearer ${autorizacao}`,
+        'Content-Type' : "application/json"},
       body: JSON.stringify(dados)
     });
 
-    if (resposta.status == 201) {
-      const dados = await resposta.json();
-      return dados;
-    } else {
-      return null;
-    }
+    const data = await resposta.json();
+    console.log(data);
+    return data;
   } catch (erro) {
     console.error("Erro:", erro);
     return null;

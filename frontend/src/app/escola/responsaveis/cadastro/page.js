@@ -2,29 +2,33 @@
 import { useState } from 'react';
 import { MenuEscola } from "@/components/MenuEscola";
 import styles from "./page.module.css";
+import { cadastrarResponsavel } from '@/services/responsavelService';
 
 export default function Home() {
   const [formData, setFormData] = useState({
       nome: '',
       cpf: '',
       rg: '',
-      genero: 'feminino',
-      cor: 'parda',
+      genero: 'FEMININO',
+      corRaca: 'PARDA',
       telefone: '',
       endereco: '',
       cep: '',
-      uf: 'parana',
-      nascimento: '',
-      aluno: '',
-      email: '',
-      estadoCivil: '',
+      uf: 'PR',
+      dataNasc: '',
+      emailPessoal: '',
+      estadoCivil: 'CASADO',
+      escola: '',
       senha: Math.random().toString(36).slice(-10)
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      //const resultado = await cadastrarEscola(formData);
+      const token = sessionStorage.getItem('access_token');
+      const escola = sessionStorage.getItem('idEscola');
+      formData.escola = escola;
+      const resultado = await cadastrarResponsavel(formData, token);
       alert('Escola cadastrada com sucesso!');
     } catch (erro) {
       alert('Erro ao cadastrar escola');
@@ -57,17 +61,17 @@ export default function Home() {
             <div className={styles.linha}>
               <label htmlFor="genero">Gênero:</label>
               <select id="genero" className={`${styles.field} ${styles.mini}`} name="genero" value={formData.genero} onChange={handleChange} required>
-                <option value="feminino">Feminino</option>
-                <option value="masculino">Masculino</option>
-                <option value="outro">Outro</option>
+                <option value="FEMININO">Feminino</option>
+                <option value="MASCULINO">Masculino</option>
+                <option value="OUTRO">Outro</option>
               </select>
-              <label htmlFor="cor">Cor/Raça:</label>
-              <select id="cor" className={`${styles.field} ${styles.mini}`} name="cor" value={formData.cor} onChange={handleChange} required>
-                <option value="amarela">Amarela</option>
-                <option value="indigena">Indígena</option>
-                <option value="branca">Branca</option>
-                <option value="parda">Parda</option>
-                <option value="preta">Preta</option>
+              <label htmlFor="corRaca">Cor/Raça:</label>
+              <select id="corRaca" className={`${styles.field} ${styles.mini}`} name="corRaca" value={formData.corRaca} onChange={handleChange} required>
+                <option value="PARDA">Parda</option>
+                <option value="BRANCA">Branca</option>
+                <option value="PRETA">Preta</option>
+                <option value="INDIGENA">Indígena</option>
+                <option value="AMARELA">Amarela</option>
               </select>
             </div>
             <label htmlFor="endereco">Endereço:</label>
@@ -76,34 +80,34 @@ export default function Home() {
               <label htmlFor="cep">CEP:</label>
               <input className={`${styles.field} ${styles.mini}`} type="text" id="cep" name="cep" placeholder="12345-678" required/>
               <label htmlFor="uf">UF:</label>
-              <select id="uf" className={`${styles.field} ${styles.mini}`} value={formData.uf} onChange={handleChange} name="uf" required>
-                <option value="acre">AC</option>
-                <option value="alagoas">AL</option>
-                <option value="amapa">AP</option>
-                <option value="amazonas">AM</option>
-                <option value="bahia">BA</option>
-                <option value="ceara">CE</option>
-                <option value="df">DF</option>
-                <option value="espirito">ES</option>
-                <option value="goias">GO</option>
-                <option value="maranhao">MA</option>
-                <option value="matoGrosso">MT</option>
-                <option value="matoGrossoSul">MS</option>
-                <option value="minas">MG</option>
-                <option value="para">PA</option>
-                <option value="paraiba">PB</option>
-                <option value="parana">PR</option>
-                <option value="pernambuco">PE</option>
-                <option value="piaui">PI</option>
-                <option value="rioJaneiro">RJ</option>
-                <option value="rioGrandeNorte">RN</option>
-                <option value="rioGrandeSul">RS</option>
-                <option value="rondonia">RO</option>
-                <option value="roraima">RR</option>
-                <option value="santa">SC</option>
-                <option value="sao">SP</option>
-                <option value="sergipe">SE</option>
-                <option value="tocantins">TO</option>
+              <select id="uf" className={`${styles.field} ${styles.mini}`} name="uf" value={formData.uf} onChange={handleChange} required>
+                <option value="AC">AC</option>
+                <option value="AL">AL</option>
+                <option value="AP">AP</option>
+                <option value="AM">AM</option>
+                <option value="BA">BA</option>
+                <option value="CE">CE</option>
+                <option value="DF">DF</option>
+                <option value="ES">ES</option>
+                <option value="GO">GO</option>
+                <option value="MA">MA</option>
+                <option value="MT">MT</option>
+                <option value="MS">MS</option>
+                <option value="MG">MG</option>
+                <option value="PA">PA</option>
+                <option value="PB">PB</option>
+                <option value="PR">PR</option>
+                <option value="PE">PE</option>
+                <option value="PI">PI</option>
+                <option value="RJ">RJ</option>
+                <option value="RN">RN</option>
+                <option value="RS">RS</option>
+                <option value="RO">RO</option>
+                <option value="RR">RR</option>
+                <option value="SC">SC</option>
+                <option value="SP">SP</option>
+                <option value="SE">SE</option>
+                <option value="TO">TO</option>
               </select>
             </div>
             <label htmlFor="estadoCivil">Estado Civil:</label>
@@ -113,11 +117,11 @@ export default function Home() {
               <option>Solteira(o)</option>
               <option>Viúva(o)</option>
             </select>
-            <label htmlFor="nascimento">Data de Nascimento:</label>
-            <input className={styles.field} type="date" id="nascimento" name="nascimento" required/>
+            <label htmlFor="dataNasc">Data de Nascimento:</label>
+            <input className={styles.field} type="date" id="dataNasc" name="dataNasc" onChange={handleChange} required/>
             <div className={styles.linha}>
-              <label htmlFor="email">Email:</label>
-              <input className={`${styles.field} ${styles.mini}`} type="email" id="email" name="email" placeholder="nome@gmail.com" required/>
+              <label htmlFor="emailPessoal">Email:</label>
+              <input className={`${styles.field} ${styles.mini}`} type="email" id="emailPessoal" name="emailPessoal" placeholder="nome@gmail.com" required/>
               <label htmlFor="telefone">Telefone:</label>
               <input className={`${styles.field} ${styles.mini}`} type="tel" id="telefone" name="telefone" placeholder="(99) 99999-9999" required/>
             </div>

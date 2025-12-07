@@ -19,7 +19,7 @@ export async function getTodosAlunosEscola(idEscola) {
 
 export async function getTodosAlunosEscolaAnoEscolar(idEscola, anoEscolar) {
   try {
-    const resposta = await fetch(`http://localhost:8000/aluno/escola/ano`, {
+    const resposta = await fetch(`http://localhost:8000/aluno/escola/${idEscola}/ano/${anoEscolar}`, {
       method: 'GET',
       headers: {'Content-Type' : "application/json"}
     });

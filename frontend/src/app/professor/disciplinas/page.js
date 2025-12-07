@@ -5,8 +5,8 @@ import { TabelasEscola, BarraPesquisa, TabelasProfessor } from "@/components/Tab
 import { getDisciplinasProfessor } from "@/services/disciplinaService";
 
 export default function Home() {
-  const disciplinas = getDisciplinasProfessor();
-  //const disciplinas = [{id : 1, nome: 'Matemática', descricao : "algo"}];
+  //const disciplinas = getDisciplinasProfessor(idProfessor);
+  const disciplinas = [{id : 1, nome: 'Matemática', descricao : "algo"}];
 
   return (
     <main>
