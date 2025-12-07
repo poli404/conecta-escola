@@ -118,7 +118,7 @@ class AlunoResponseSchema(PessoaResponseSchema):
 class ResponsavelCreateSchema(PessoaCreateSchema):
     emailPessoal: str
     estadoCivil: EstadoCivil
-    id_aluno: str # cpf
+    id_aluno: Optional[str] = None  # cpf
 
     model_config = {"from_attributes": True}
 

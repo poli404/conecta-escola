@@ -20,7 +20,7 @@ def listar_responsaveis(db: Session = Depends(get_db)):
 
 
 @responsavel_router.post("/cadastro", response_model=ResponsavelResponseSchema, status_code=status.HTTP_201_CREATED)
-def cadastrar_responsavel(responsavel: ResponsavelCreateSchema, db: Session = Depends(get_db), escola_autenticada: Escola = Depends(get_current_escola)):
+def cadastrar_responsavel(responsavel: ResponsavelCreateSchema, db: Session = Depends(get_db)):
     """
     Cadastra um novo responsável no sistema.
     Apenas escolas autenticadas podem cadastrar responsáveis.
@@ -34,9 +34,11 @@ def cadastrar_responsavel(responsavel: ResponsavelCreateSchema, db: Session = De
     if existente:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Responsável já cadastrado(a).")
     
-    responsavel.id_aluno = responsavel.id_aluno.replace(".", "").replace("-", "")
-
-    aluno = db.query(Aluno).filter(Aluno.cpf == responsavel.id_aluno).first()
+    aluno = None
+    if responsavel.id_aluno:
+        responsavel.id_aluno = responsavel.id_aluno.replace(".", "").replace("-", "")
+        aluno = db.query(Aluno).filter(Aluno.cpf == responsavel.id_aluno).first()
+    
     hashed_password = get_password_hash(responsavel.senha)
     novo_responsavel = Responsavel(**responsavel.model_dump(exclude={"senha", "id_aluno"}), senha=hashed_password, aluno=aluno)
     

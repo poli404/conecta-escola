@@ -153,7 +153,8 @@ class Responsavel(Pessoa):
         super().__init__(nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha)
         self.emailPessoal = emailPessoal
         self.estadoCivil = estadoCivil
-        self.alunos.append(aluno)
+        if aluno:
+            self.alunos.append(aluno)
 
     __mapper_args__ = {"polymorphic_identity": TipoPessoa.RESPONSAVEL}
 
