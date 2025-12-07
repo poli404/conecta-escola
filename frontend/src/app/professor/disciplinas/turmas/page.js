@@ -1,7 +1,7 @@
 import { MenuProfessor } from "@/components/MenuProfessor";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { CorpoTabela, BarraPesquisa } from "@/components/Tabela";
+import { TabelasEscola, BarraPesquisa, TabelasProfessor } from "@/components/Tabela";
 import { getTurmasDisciplina } from "@/services/turmaService";
 
 export default function Home() {
@@ -22,7 +22,7 @@ export default function Home() {
                 <th></th>
                 </tr>
             </thead>
-            <CorpoTabela dados={turmas} tipo={"turmas"} usuario="professor"/>
+            <TabelasProfessor dados={turmas} tipo={"turmas"}/>
             </table>
       </div>
     </main>

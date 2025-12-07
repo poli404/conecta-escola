@@ -1,19 +1,43 @@
 'use client';
 import { cadastrarDisciplina } from "@/services/disciplinaService";
 import styles from "./page.module.css";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getTodosProfessoresEscola } from "@/services/professorService";
 
 export default function Home() {
+  const [idEscola, setIdEscola] = useState(null);
+  const [professores, setProfessores] = useState(null);
+    
+  useEffect(() => {
+      const id = sessionStorage.getItem("idEscola");
+      setIdEscola(id);
+  
+      (async () => {
+        try {
+          const dados = await getTodosProfessoresEscola(id);
+          setProfessores(dados);
+        } catch (err) {
+          console.error("Erro ao buscar professores:", err);
+          setProfessores([]);
+        }
+      })();
+    }, []);
+  
+    const mostrarProfessores = professores ?? [];
+
   const [formData, setFormData] = useState({
-    nome: '',
-    descricao: ''
+    descricao: '',
+    id_professor: '',
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const resultado = await cadastrarDisciplina(formData);
-    if (resultado) {
+    const token = sessionStorage.getItem('access_token');
+    const resultado = await cadastrarDisciplina(formData, token);
+    if (resultado.status === 201) {
       alert("Disciplina cadastrada com sucesso!");
+    } else {
+      alert("Erro ao cadastrar disciplina!");
     }
   };
 
@@ -31,10 +55,16 @@ export default function Home() {
         <form className={styles.forms} onSubmit={handleSubmit}>
           <div>
             <h3 className={styles.title}>Informações da Disciplina</h3>
-            <label htmlFor="nome">Nome da Disciplina:</label>
-            <input className={styles.field} type="text" id="nome" name="nome" placeholder="Matemática" value={formData.nome} onChange={handleChange} required/>
-            <label htmlFor="descricao">Adicione a descrição da disciplina:</label>
-            <input className={styles.field} type="text" id="descricao" name="descricao" placeholder="Explique o principais objetivos..." value={formData.descricao} onChange={handleChange} required/>
+            <label htmlFor="descricao">Nome da Disciplina:</label>
+            <input className={styles.field} type="text" id="descricao" name="descricao" value={formData.descricao} onChange={handleChange} required/>
+            <label htmlFor="id_professor">Professor Responsável:</label>
+            <select className={styles.field} id="id_professor" name="id_professor" value={formData.id_professor} onChange={handleChange} required>
+              {mostrarProfessores.map((e) => 
+              <option key={e.cpf} value={e.cpf}>
+                {e.nome}
+              </option>)}
+              <option value=''>Selecione o professor</option>
+            </select>
           </div>
           <button type="submit">Cadastrar Disciplina</button>
         </form>

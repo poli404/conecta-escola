@@ -12,7 +12,7 @@ export default function Home() {
 
   const [formData, setFormData] = useState({
     anoEscolar: '',
-    turma: '',
+    identificador: '',
     alunos: []
   });
 
@@ -37,7 +37,7 @@ export default function Home() {
     });
 
     if (e.target.name === 'anoEscolar') {
-      //const alunos = getTodosAlunosEscolaAnoEscolar(idEscola, formData.anoEscolar);
+      const alunos = getTodosAlunosEscolaAnoEscolar(idEscola, formData.anoEscolar);
     }
   };
 
@@ -52,12 +52,12 @@ export default function Home() {
             <h3 className={styles.title}>Informações da Turma</h3>
             <label htmlFor="ano">Ano Escolar:</label>
             <input className={styles.field} type="number" id="anoEscolar" name="anoEscolar" value={formData.anoEscolar} onChange={handleChange} required/>
-            <label htmlFor="turma">Turma:</label>
-            <input className={styles.field} type="text" id="turma" name="turma" placeholder="A" value={formData.turma} onChange={handleChange} required/>
+            <label htmlFor="identificador">Turma:</label>
+            <input className={styles.field} type="text" id="identificador" name="identificador" placeholder="A" value={formData.identificador} onChange={handleChange} required/>
             <label htmlFor="alunos">Adicione alunos à turma:</label>
             <select className={styles.field} name="alunos" ref={alunosRef} multiple>
               {alunos.map(
-                (e) => (<option key={e.id} value={e.id}>{e.nome}</option>)
+                (e) => (<option key={e.cpf} value={e.cpf}>{e.nome}</option>)
               )}
             </select>
           </div>

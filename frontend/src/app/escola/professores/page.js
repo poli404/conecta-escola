@@ -1,17 +1,37 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { MenuEscola } from "@/components/MenuEscola";
-import { CorpoTabela, BarraPesquisa } from "@/components/Tabela";
+import { TabelasEscola, BarraPesquisa } from "@/components/Tabela";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { getTodosProfessoresEscola } from "@/services/professorService";
 
 export default function Home() {
-  idEscola = sessionStorage.getItem("idEscola");
-  //const professores = getTodosProfessoresEscola(idEscola);
-  const professores = [{ id: 1, nome: "Dante Medeiros Filho" }, { id: 2, nome: "Aline Maria Malachini Miotto Amaral" }]; // Dados simulados
-  
+  const [idEscola, setIdEscola] = useState(null);
+  const [professores, setProfessores] = useState(null);
+
+  useEffect(() => {
+    const id = sessionStorage.getItem("idEscola");
+    setIdEscola(id);
+
+    (async () => {
+      try {
+        const dados = await getTodosProfessoresEscola(id);
+        setProfessores(dados);
+      } catch (err) {
+        console.error("Erro ao buscar professores:", err);
+        setProfessores([]);
+      }
+    })();
+  }, []);
+
+  // enquanto carrega, professores === null
+  const mostrarProfessores = professores ?? [];
+
   return (
     <main>
-      <MenuEscola/>
+      <MenuEscola />
       <div className={styles.container}>
         <Link className={styles.fakeButton} href="/escola/professores/cadastro">Cadastrar Novo Professor</Link>
 
@@ -19,12 +39,12 @@ export default function Home() {
           <thead>
             <BarraPesquisa col="2"/>
             <tr>
-              <th className={styles.title}>Identificação</th>
-              <th className={styles.title}>Nome do Docente</th>
+              <th className={styles.title}>Nome</th>
+              <th className={styles.title}>CPF</th>
               <th className={styles.title}/>
             </tr>
           </thead>
-          <CorpoTabela dados={professores} tipo={"professores"}/>
+          <TabelasEscola dados={mostrarProfessores} tipo={"professores"} />
         </table>
       </div>
     </main>

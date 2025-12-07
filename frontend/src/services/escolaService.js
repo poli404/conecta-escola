@@ -7,7 +7,8 @@ export async function cadastrarEscola(dadosEscola) {
     body: JSON.stringify(dadosEscola)
   });
   console.log('Response status:', response.json());
-  return response.json();
+  const dados = await resposta.json();
+  return dados;
 }
 
 export async function getEscola(dominio) {
@@ -18,7 +19,8 @@ export async function getEscola(dominio) {
     });
 
     if (resposta.status == 200) {
-      return resposta.json();
+      const dados = await resposta.json();
+      return dados;
     } else {
       return null;
     }

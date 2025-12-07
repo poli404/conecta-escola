@@ -1,7 +1,7 @@
 import { MenuProfessor } from "@/components/MenuProfessor";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { CorpoTabela, BarraPesquisa } from "@/components/Tabela";
+import { TabelasEscola, BarraPesquisa, TabelasProfessor } from "@/components/Tabela";
 import { getAlunosTurma } from "@/services/alunoService";
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
               <th className={`${styles.title} ${styles.center}`}>Notas e Faltas</th>
             </tr>
           </thead>
-          <CorpoTabela dados={alunos} tipo={"alunos"} usuario="professor"/>
+          <TabelasProfessor dados={alunos} tipo={"alunos"}/>
         </table>
       </div>
     </main>
