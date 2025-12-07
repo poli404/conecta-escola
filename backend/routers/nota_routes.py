@@ -4,8 +4,8 @@ from datetime import date
 
 from database.schemas import NotaCreateSchema, NotaUpdateSchema, NotaResponseSchema
 from database.dependencies import get_db
-from database.models import Nota, Aluno, AlunoTurma, Disciplina, Professor
-from routers.security import get_current_professor
+from database.models import Nota, Aluno, AlunoTurma, Disciplina, Professor, Responsavel
+from routers.security import get_current_professor, get_current_aluno, get_current_user
 
 nota_router = APIRouter(prefix="/nota", tags=["nota"])
 
@@ -74,11 +74,25 @@ def atualizar_nota(id_nota: int, nota: NotaUpdateSchema, db: Session = Depends(g
 
 
 @nota_router.get("/aluno/{cpf}", response_model=list[NotaResponseSchema])
-def listar_notas_por_aluno(cpf: str, db: Session = Depends(get_db)):
+def listar_notas_por_aluno(cpf: str, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     """
     Lista todas as notas de um aluno específico.
+    Professor pode ver notas de qualquer aluno.
+    Responsável só pode ver notas dos próprios filhos.
     """
     cpf_limpo = cpf.replace(".", "").replace("-", "")
+    
+    if current_user["tipo"] == "responsavel":
+        aluno = db.query(Aluno).filter(Aluno.cpf == cpf_limpo).first()
+        if not aluno:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Aluno não encontrado.")
+        
+        responsavel: Responsavel = current_user["usuario"]
+        if aluno.idResponsavel != responsavel.cpf:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você só pode visualizar notas dos seus filhos.")
+        
+    elif current_user["tipo"] != "professor":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Acesso negado: apenas professores e responsáveis podem visualizar notas de alunos.")
     
     notas = db.query(Nota).filter(
         Nota.idAluno == cpf_limpo
@@ -87,16 +101,18 @@ def listar_notas_por_aluno(cpf: str, db: Session = Depends(get_db)):
         joinedload(Nota.disciplina).joinedload(Disciplina.professor)
     ).all()
     
-    if not notas:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhuma nota encontrada para este aluno.")
     return notas
 
 
 @nota_router.get("/disciplina/{id_disciplina}", response_model=list[NotaResponseSchema])
-def listar_notas_por_disciplina(id_disciplina: int, db: Session = Depends(get_db)):
+def listar_notas_por_disciplina(id_disciplina: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     """
     Lista todas as notas de uma disciplina específica.
+    Apenas professores e escola podem visualizar estas notas.
     """
+    if current_user["tipo"] not in ["professor", "escola"]:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Acesso negado: apenas professores e escola podem visualizar notas por disciplina.")
+    
     notas = db.query(Nota).filter(
         Nota.idDisciplina == id_disciplina
     ).options(
@@ -104,16 +120,18 @@ def listar_notas_por_disciplina(id_disciplina: int, db: Session = Depends(get_db
         joinedload(Nota.disciplina).joinedload(Disciplina.professor)
     ).all()
     
-    if not notas:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhuma nota encontrada para esta disciplina.")
     return notas
 
 
 @nota_router.get("/turma/{id_turma}", response_model=list[NotaResponseSchema])
-def listar_notas_por_turma(id_turma: int, db: Session = Depends(get_db)):
+def listar_notas_por_turma(id_turma: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     """
     Lista todas as notas dos alunos matriculados em uma turma específica.
+    Apenas professores e escola podem visualizar estas notas.
     """
+    if current_user["tipo"] not in ["professor", "escola"]:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Acesso negado: apenas professores e escola podem visualizar notas por turma.")
+    
     notas = db.query(Nota).join(Aluno).join(AlunoTurma).filter(
         AlunoTurma.idTurma == id_turma
     ).options(
@@ -121,6 +139,18 @@ def listar_notas_por_turma(id_turma: int, db: Session = Depends(get_db)):
         joinedload(Nota.disciplina).joinedload(Disciplina.professor)
     ).all()
     
-    if not notas:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhuma nota encontrada para alunos desta turma.")
+    return notas
+
+
+@nota_router.get("/minhas", response_model=list[NotaResponseSchema])
+def listar_minhas_notas(db: Session = Depends(get_db), aluno: Aluno = Depends(get_current_aluno)):
+    """
+    Lista todas as notas do aluno autenticado.
+    """
+    notas = db.query(Nota).filter(
+        Nota.idAluno == aluno.cpf
+    ).options(
+        joinedload(Nota.disciplina).joinedload(Disciplina.professor)
+    ).all()
+    
     return notas

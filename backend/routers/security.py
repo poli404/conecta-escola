@@ -8,7 +8,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from database.dependencies import get_db
-from database.models import Escola, Professor, Responsavel
+from database.models import Escola, Professor, Responsavel, Aluno
 
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -50,7 +50,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     """
     Valida o token JWT e retorna o usuário autenticado.
-    Busca em Escola, Professor ou Responsavel.
+    Busca em Escola, Professor, Responsavel ou Aluno.
     """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -61,24 +61,30 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     try:
         # Decodifica o token JWT
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
+        identificador: str = payload.get("sub")
+        if identificador is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
     
-    # Busca o usuário no banco de dados
-    user = db.query(Escola).filter(Escola.email == email).first()
+    # Busca o usuário no banco de dados por email
+    user = db.query(Escola).filter(Escola.email == identificador).first()
     if user:
         return {"tipo": "escola", "usuario": user}
     
-    user = db.query(Professor).filter(Professor.emailEscolar == email).first()
+    user = db.query(Professor).filter(Professor.emailEscolar == identificador).first()
     if user:
         return {"tipo": "professor", "usuario": user}
     
-    user = db.query(Responsavel).filter(Responsavel.emailEscolar == email).first()
+    user = db.query(Responsavel).filter(Responsavel.emailPessoal == identificador).first()
     if user:
         return {"tipo": "responsavel", "usuario": user}
+    
+    # Se não encontrou por email, busca por CPF (aluno)
+    cpf_limpo = identificador.replace(".", "").replace("-", "")
+    user = db.query(Aluno).filter(Aluno.cpf == cpf_limpo).first()
+    if user:
+        return {"tipo": "aluno", "usuario": user}
     
     raise credentials_exception
 
@@ -88,10 +94,7 @@ def get_current_professor(current_user: dict = Depends(get_current_user)):
     Usado para proteger rotas que apenas professores podem acessar.
     """
     if current_user["tipo"] != "professor":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Acesso negado: apenas professores podem realizar esta ação"
-        )
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Acesso negado: apenas professores podem realizar esta ação")
     return current_user["usuario"]
 
 def get_current_escola(current_user: dict = Depends(get_current_user)):
@@ -100,8 +103,21 @@ def get_current_escola(current_user: dict = Depends(get_current_user)):
     Usado para proteger rotas administrativas (cadastros, relatórios, etc).
     """
     if current_user["tipo"] != "escola":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Acesso negado: apenas a escola pode realizar esta ação"
-        )
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Acesso negado: apenas a escola pode realizar esta ação")
+    return current_user["usuario"]
+
+def get_current_aluno(current_user: dict = Depends(get_current_user)):
+    """
+    Garante que o usuário autenticado é um Aluno.
+    """
+    if current_user["tipo"] != "aluno":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Acesso negado: apenas alunos podem realizar esta ação")
+    return current_user["usuario"]
+
+def get_current_responsavel(current_user: dict = Depends(get_current_user)):
+    """
+    Garante que o usuário autenticado é um Responsável.
+    """
+    if current_user["tipo"] != "responsavel":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Acesso negado: apenas responsáveis podem realizar esta ação")
     return current_user["usuario"]

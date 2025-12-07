@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
 from database.dependencies import get_db
-from database.models import Escola, Professor, Responsavel
+from database.models import Escola, Professor, Responsavel, Aluno
 from routers.security import verify_password, create_access_token
 
 login_router = APIRouter(prefix="/login", tags=["login"])
@@ -23,22 +23,29 @@ class UsuarioInfo(BaseModel):
 async def login_usuarios(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     """
     Rota padrão de autenticação.
-    Verifica o usuário e retorna o token de acesso.
+    Aceita email (escola/professor/responsavel) ou CPF (aluno).
     """
-    email = form_data.username
+    username = form_data.username
     senha = form_data.password
 
-    user = db.query(Escola).filter(Escola.email == email).first()
+    # Tenta buscar por email
+    user = db.query(Escola).filter(Escola.email == username).first()
     if not user:
-        user = db.query(Professor).filter(Professor.emailEscolar == email).first()
+        user = db.query(Professor).filter(Professor.emailEscolar == username).first()
     if not user:
-        user = db.query(Responsavel).filter(Responsavel.emailPessoal == email).first()
+        user = db.query(Responsavel).filter(Responsavel.emailPessoal == username).first()
+    
+    # Se não encontrou por email, tenta por CPF (aluno)
+    if not user:
+        cpf_limpo = username.replace(".", "").replace("-", "")
+        user = db.query(Aluno).filter(Aluno.cpf == cpf_limpo).first()
 
     if not user or not verify_password(senha, user.senha):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="E-mail ou senha incorretos", headers={"WWW-Authenticate": "Bearer"})
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Login ou senha incorretos", headers={"WWW-Authenticate": "Bearer"})
 
-    email_usuario = getattr(user, 'email', None) or getattr(user, 'emailEscolar', None)
-    access_token = create_access_token(data={"sub": email_usuario})
+    # Para token, usa email se tiver, senão usa CPF
+    identificador = getattr(user, 'email', None) or getattr(user, 'emailEscolar', None) or getattr(user, 'emailPessoal', None) or user.cpf
+    access_token = create_access_token(data={"sub": identificador})
 
     return {"access_token": access_token, "token_type": "bearer"}
 

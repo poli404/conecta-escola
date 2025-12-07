@@ -6,14 +6,15 @@ from database.schemas import AlunoCreateSchema, AlunoResponseSchema
 from database.dependencies import get_db
 from database.models import Aluno, Responsavel, Escola, AlunoTurma, Turma
 from database.enums import AnoEscolar
-from routers.security import get_password_hash, get_current_escola
+from routers.security import get_password_hash, get_current_escola, get_current_user
 
 aluno_router = APIRouter(prefix="/aluno", tags=["aluno"])
 
 @aluno_router.get("/", response_model=list[AlunoResponseSchema])
-def listar_alunos(db: Session = Depends(get_db)):
+def listar_alunos(db: Session = Depends(get_db), escola: Escola = Depends(get_current_escola)):
     """
     Lista todos os alunos cadastrados e seu responsável associado.
+    Apenas escolas autenticadas podem acessar.
     """
     alunos = db.query(Aluno).options(joinedload(Aluno.responsavel)).all()
     if not alunos:
@@ -60,7 +61,7 @@ def cadastrar_aluno(aluno: AlunoCreateSchema, db: Session = Depends(get_db), esc
 
 
 @aluno_router.get("/{cpf}", response_model=AlunoResponseSchema)
-def buscar_aluno(cpf: str, db: Session = Depends(get_db)):
+def buscar_aluno(cpf: str, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     """
     Busca um aluno específico por CPF.
     """

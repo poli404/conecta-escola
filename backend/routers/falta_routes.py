@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 
 from database.dependencies import get_db
-from database.models import Falta, Aluno, Disciplina, AlunoTurma, Turma, Professor
+from database.models import Falta, Aluno, Disciplina, AlunoTurma, Turma, Professor, Responsavel
 from database.schemas import FaltaCreateSchema, FaltaResponseSchema, FaltaUpdateSchema
-from routers.security import get_current_professor
+from routers.security import get_current_professor, get_current_aluno, get_current_user
 
 falta_router = APIRouter(prefix="/falta", tags=["falta"])
 
@@ -61,6 +61,42 @@ def justificar_falta(id_falta: int, dados: FaltaUpdateSchema, db: Session = Depe
     
     return falta
 
-@falta_router.get("/aluno", response_model=list[FaltaResponseSchema])
-def listar_faltas_disciplina(cpf: str, disciplina, db):
-    pass
+@falta_router.get("/minhas", response_model=list[FaltaResponseSchema])
+def listar_minhas_faltas(db: Session = Depends(get_db), aluno: Aluno = Depends(get_current_aluno)):
+    """
+    Retorna todas as faltas do aluno autenticado.
+    """
+    faltas = db.query(Falta).options(
+        joinedload(Falta.disciplina).joinedload(Disciplina.professor)
+    ).filter(Falta.idAluno == aluno.cpf).all()
+    
+    return faltas
+
+@falta_router.get("/aluno/{cpf}", response_model=list[FaltaResponseSchema])
+def listar_faltas_por_aluno(cpf: str, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    """
+    Lista todas as faltas de um aluno específico.
+    Professor pode ver faltas de qualquer aluno.
+    Responsável só pode ver faltas dos próprios filhos.
+    """
+    cpf_limpo = cpf.replace(".", "").replace("-", "")
+    
+    if current_user["tipo"] == "responsavel":
+        aluno = db.query(Aluno).filter(Aluno.cpf == cpf_limpo).first()
+        if not aluno:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Aluno não encontrado.")
+        
+        responsavel: Responsavel = current_user["usuario"]
+        if aluno.idResponsavel != responsavel.cpf:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você só pode visualizar faltas dos seus filhos.")
+        
+    elif current_user["tipo"] != "professor":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Acesso negado: apenas professores e responsáveis podem visualizar faltas de alunos.")
+    
+    faltas = db.query(Falta).filter(
+        Falta.idAluno == cpf_limpo
+    ).options(
+        joinedload(Falta.disciplina).joinedload(Disciplina.professor)
+    ).all()
+    
+    return faltas
