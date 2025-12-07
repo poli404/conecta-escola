@@ -6,7 +6,8 @@ export async function getTodasTurmasEscola(idEscola) {
     });
 
     if (resposta.status == 200) {
-      return resposta.json();
+      const dados = await resposta.json();
+      return dados;
     } else {
       return null;
     }
@@ -23,7 +24,8 @@ export async function getTurmasDisciplina(idDisciplina) {
     });
 
     if (resposta.status === 200) {
-        return JSON(resposta.body);
+      const dados = await resposta.json();
+      return dados;
     } else {
         alert("Turma não encontrada!");
     }
@@ -36,7 +38,8 @@ export async function getTurma(idTurma) {
     });
 
     if (resposta.status === 200) {
-        return JSON(resposta.body);
+      const dados = await resposta.json();
+      return dados;
     } else {
         alert("Turma não encontrada!");
     }
@@ -49,7 +52,8 @@ export async function getTurmasProfessor(idProfessor) {
     });
 
     if (resposta.status === 200) {
-        return JSON(resposta.body);
+      const dados = await resposta.json();
+      return dados;
     } else {
         alert("Turma não encontrada!");
     }
@@ -64,7 +68,8 @@ export async function cadastrarTurma(dados) {
     });
 
     if (resposta.status == 201) {
-      return resposta.json();
+      const dados = await resposta.json();
+      return dados;
     } else {
       return null;
     }

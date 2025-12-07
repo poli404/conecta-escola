@@ -1,12 +1,15 @@
 export async function getTodasDisciplinasEscola(idEscola) {
   try {
-    const resposta = await fetch(`https://localhost:8000/disciplina/escola/${idEscola}`, {
+    const resposta = await fetch(`http://127.0.0.1:8000/disciplina/escola/${idEscola}`, {
       method: 'GET',
-      headers: {'Content-Type' : "application/json"}
+      headers: {
+        'accept' : 'application/json',
+        'Content-Type' : "application/json"}
     });
 
     if (resposta.status == 200) {
-      return resposta.json();
+      const dados = await resposta.json();
+      return dados;
     } else {
       return null;
     }
@@ -18,13 +21,14 @@ export async function getTodasDisciplinasEscola(idEscola) {
 
 export async function getDisciplinasProfessor(idProfessor) {
   try {
-    const resposta = await fetch(`https://localhost:8000/disciplina/prodessor/${idProfessor}`, {
+    const resposta = await fetch(`http://localhost:8000/disciplina/prodessor/${idProfessor}`, {
       method: 'GET',
       headers: {'Content-Type' : "application/json"}
     });
 
     if (resposta.status == 200) {
-      return resposta.json();
+      const dados = await resposta.json();
+      return dados;
     } else {
       return null;
     }
@@ -36,13 +40,14 @@ export async function getDisciplinasProfessor(idProfessor) {
 
 export async function getDisciplinasTurma(idTurma) {
   try {
-    const resposta = await fetch(`https://localhost:8000/disciplina/turma/${idTurma}`, {
+    const resposta = await fetch(`http://localhost:8000/disciplina/turma/${idTurma}`, {
       method: 'GET',
       headers: {'Content-Type' : "application/json"}
     });
 
     if (resposta.status == 200) {
-      return resposta.json();
+      const dados = await resposta.json();
+      return dados;
     } else {
       return null;
     }
@@ -54,14 +59,15 @@ export async function getDisciplinasTurma(idTurma) {
 
 export async function getDisciplina(idDisciplina) {
   try {
-    const resposta = await fetch(`https://localhost:8000/disciplina`, {
+    const resposta = await fetch(`http://localhost:8000/disciplina`, {
       method: 'GET',
       headers: {'Content-Type' : "application/json"},
       body: JSON.stringify(idDisciplina)
     });
 
     if (resposta.status == 200) {
-      return resposta.json();
+      const dados = await resposta.json();
+      return dados;
     } else {
       return null;
     }
@@ -71,19 +77,20 @@ export async function getDisciplina(idDisciplina) {
   }
 }
 
-export async function cadastrarDisciplina(formData) {
+export async function cadastrarDisciplina(formData, autorizacao) {
     try {
-    const resposta = await fetch(`https://localhost:8000/disciplina/cadastro`, {
+    const resposta = await fetch(`http://localhost:8000/disciplina/cadastro`, {
       method: 'POST',
-      headers: {'Content-Type' : "application/json"},
+      headers: {
+        'accept' : 'application/json',
+        'Authorization' : `Bearer ${autorizacao}`,
+        'Content-Type' : "application/json"},
       body: JSON.stringify(formData)
     });
 
-    if (resposta.status == 201) {
-      return resposta.json();
-    } else {
-      return null;
-    }
+    const dados = await resposta.json();
+    console.log(dados);
+    return dados;
   } catch (erro) {
     console.error("Erro:", erro);
     return null;
@@ -92,14 +99,15 @@ export async function cadastrarDisciplina(formData) {
 
 export async function atualizarDisciplina(idDisciplina, formData) {
     try {
-    const resposta = await fetch(`https://localhost:8000/disciplina/atualizar/${idDisciplina}`, {
+    const resposta = await fetch(`http://localhost:8000/disciplina/atualizar/${idDisciplina}`, {
       method: 'PUT',
       headers: {'Content-Type' : "application/json"},
       body: JSON.stringify(formData)
     });
 
     if (resposta.status == 203) {
-      return resposta.json();
+      const dados = await resposta.json();
+      return dados;
     } else {
       return null;
     }

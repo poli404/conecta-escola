@@ -1,6 +1,6 @@
 import { MenuProfessor } from "@/components/MenuProfessor";
 import styles from "./page.module.css";
-import { CorpoTabela } from "@/components/Tabela";
+import { TabelasEscola, TabelasProfessor } from "@/components/Tabela";
 
 export default function Home() {
   //const notas = getNotas(idAluno);
@@ -24,7 +24,7 @@ export default function Home() {
               <th></th>
             </tr>
             </thead>
-            <CorpoTabela dados={notas} tipo={"detalhes"} usuario="professor"/>
+            <TabelasProfessor dados={notas} tipo={"detalhes"}/>
           </table>
           <button>Adicionar Nota</button>
           <table className={styles.table} id="tabelaFaltas">
@@ -35,7 +35,7 @@ export default function Home() {
                 <th></th>
               </tr>
               </thead>
-              <CorpoTabela dados={faltas} tipo={"faltas"} usuario="professor"/>
+              <TabelasProfessor dados={faltas} tipo={"faltas"}/>
           </table>
           <button>Adicionar Falta</button>
       </div>

@@ -1,11 +1,32 @@
+'use client';
 import { MenuEscola } from "@/components/MenuEscola";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { CorpoTabela, BarraPesquisa } from "@/components/Tabela";
+import { TabelasEscola, BarraPesquisa } from "@/components/Tabela";
+import { getTodasTurmasEscola } from "@/services/turmaService";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  //const alunos = getAllTurmas();
-  const turmas = [{id : 1, anoEscolar: '1º ano', turma: 'A'}];
+  const [idEscola, setIdEscola] = useState(null);
+  const [turmas, setTurmas] = useState(null);
+  
+  useEffect(() => {
+    const id = sessionStorage.getItem("idEscola");
+    setIdEscola(id);
+
+    (async () => {
+          try {
+            const dados = await getTodasTurmasEscola(id);
+            setTurmas(dados);
+          } catch (err) {
+            console.error("Erro ao buscar turmas:", err);
+            setTurmas([]);
+          }
+        })();
+  }, []);
+  
+  const mostrarTurmas = turmas ?? [];
+  //const turmas = [{id : 1, anoEscolar: '1º ano', turma: 'A'}];
 
   return (
     <main>
@@ -22,7 +43,7 @@ export default function Home() {
               <th></th>
             </tr>
           </thead>
-          <CorpoTabela dados={turmas} tipo={"turmas"}/>
+          <TabelasEscola dados={mostrarTurmas} tipo={"turmas"}/>
         </table>
       </div>
     </main>

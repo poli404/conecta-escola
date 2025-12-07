@@ -1,7 +1,7 @@
 "use client";
 import { MenuEscola } from "@/components/MenuEscola";
 import styles from "./page.module.css";
-import { CorpoTabela, BarraPesquisa } from "@/components/Tabela";
+import { TabelasEscola, BarraPesquisa } from "@/components/Tabela";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
@@ -25,7 +25,7 @@ export default function Home() {
               <th></th>
             </tr>
           </thead>
-          <CorpoTabela dados={alunos} tipo={"alunos"}/>
+          <TabelasEscola dados={alunos} tipo={"alunos"}/>
         </table>
       </div>
     </main>
