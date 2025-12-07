@@ -43,16 +43,45 @@ def cadastrar_disciplina(disciplina: DisciplinaCreateSchema, db: Session = Depen
     return nova_disciplina
 
 
+@disciplina_router.put("/{id_disciplina}", response_model=DisciplinaResponseSchema)
+def atualizar_disciplina(id_disciplina: int, disciplina_atualizada: DisciplinaCreateSchema, db: Session = Depends(get_db), escola_autenticada: Escola = Depends(get_current_escola)):
+    """
+    Atualiza os dados de uma disciplina existente.
+    Apenas escolas autenticadas podem atualizar disciplinas.
+    """
+    disciplina = db.query(Disciplina).filter(Disciplina.id == id_disciplina).first()
+    if not disciplina:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Disciplina não encontrada.")
+
+    disciplina_atualizada.id_professor = disciplina_atualizada.id_professor.replace(".", "").replace("-", "")
+    professor = db.query(Professor).filter(Professor.cpf == disciplina_atualizada.id_professor).first()
+    if not professor:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Professor(a) não cadastrado(a).")
+
+    existente = db.query(Disciplina).filter(
+        Disciplina.descricao == disciplina_atualizada.descricao,
+        Disciplina.idProfessor == professor.cpf,
+        Disciplina.id != id_disciplina 
+    ).first()
+    if existente:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Já existe outra disciplina com essa descrição para este professor.")
+
+    disciplina.descricao = disciplina_atualizada.descricao
+    disciplina.professor = professor
+
+    db.commit()
+    db.refresh(disciplina)
+    return disciplina
+
+
 @disciplina_router.get("/{id_disciplina}", response_model=DisciplinaResponseSchema)
 def buscar_disciplina(id_disciplina: int, db: Session = Depends(get_db)):
     """
     Busca uma disciplina específica por ID.
     """
     disciplina = db.query(Disciplina).options(joinedload(Disciplina.professor)).filter(Disciplina.id == id_disciplina).first()
-    
     if not disciplina:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Disciplina não encontrada.")
-    
     return disciplina
 
 
