@@ -169,7 +169,7 @@ class Disciplina(Base):
     professor = relationship("Professor", back_populates="disciplinas")
     notas = relationship("Nota", back_populates="disciplina")
     turmas_disciplina = relationship("TurmaDisciplina", back_populates="disciplina")
-    faltas = relationship("Falta", back_populates="disciplinas")
+    faltas = relationship("Falta", back_populates="disciplina")
 
     def __init__(self, descricao, professor):
         self.descricao = descricao
@@ -246,7 +246,7 @@ class Falta(Base):
     id = Column("id", Integer, primary_key=True, autoincrement=True)
     data = Column("data", Date, nullable=False)
     justificada = Column("justificada", Boolean, default=False)
-    quantidade = Column("justificada", Integer)
+    quantidade = Column("quantidade", Integer)
 
     # relacionamento com aluno e disciplina
     idAluno = Column("id_aluno", String(11), ForeignKey("alunos.cpf"), nullable=False)

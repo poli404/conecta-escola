@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session, joinedload
 # Importações de Schemas, Dependências, Modelos e Segurança
 from database.schemas import AlunoCreateSchema, AlunoResponseSchema
 from database.dependencies import get_db
-from database.models import Aluno, Responsavel, Escola, AlunoTurma
+from database.models import Aluno, Responsavel, Escola, AlunoTurma, Turma
+from database.enums import AnoEscolar
 from routers.security import get_password_hash, get_current_escola
 
 aluno_router = APIRouter(prefix="/aluno", tags=["aluno"])
@@ -115,4 +116,17 @@ def listar_alunos_por_escola(id_escola: int, db: Session = Depends(get_db)):
     
     if not alunos:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhum aluno encontrado para esta escola.")
+    return alunos
+
+
+@aluno_router.get("/escola/{id_escola}/ano/{ano_escolar}", response_model=list[AlunoResponseSchema])
+def listar_alunos_por_escola_e_ano(id_escola: int, ano_escolar: AnoEscolar, db: Session = Depends(get_db)):
+    """
+    Lista todos os alunos de uma escola específica que estão matriculados em turmas de um determinado ano escolar.
+    """
+    alunos = db.query(Aluno).join(AlunoTurma).join(Turma).filter(
+        Aluno.idEscola == id_escola,
+        Turma.ano_escolar == ano_escolar
+    ).options(joinedload(Aluno.responsavel)).distinct().all()
+    
     return alunos
