@@ -4,14 +4,16 @@ from datetime import date
 
 from database.schemas import NotaCreateSchema, NotaUpdateSchema, NotaResponseSchema
 from database.dependencies import get_db
-from database.models import Nota, Aluno, AlunoTurma, Disciplina
+from database.models import Nota, Aluno, AlunoTurma, Disciplina, Professor
+from routers.security import get_current_professor
 
 nota_router = APIRouter(prefix="/nota", tags=["nota"])
 
 @nota_router.post("/", response_model=NotaResponseSchema, status_code=status.HTTP_201_CREATED)
-def cadastrar_nota(nota: NotaCreateSchema, db: Session = Depends(get_db)):
+def cadastrar_nota(nota: NotaCreateSchema, db: Session = Depends(get_db), professor: Professor = Depends(get_current_professor)):
     """
     Cadastra uma nova nota para um aluno em uma disciplina.
+    Apenas professores autenticados podem cadastrar notas.
     """
     cpf_aluno = nota.id_aluno.replace(".", "").replace("-", "")
     
@@ -46,9 +48,10 @@ def cadastrar_nota(nota: NotaCreateSchema, db: Session = Depends(get_db)):
 
 
 @nota_router.put("/{id_nota}", response_model=NotaResponseSchema)
-def atualizar_nota(id_nota: int, nota: NotaUpdateSchema, db: Session = Depends(get_db)):
+def atualizar_nota(id_nota: int, nota: NotaUpdateSchema, db: Session = Depends(get_db), professor: Professor = Depends(get_current_professor)):
     """
     Altera a nota de um aluno em uma disciplina.
+    Apenas professores autenticados podem alterar notas.
     """
     nota_existente = db.query(Nota).filter(Nota.id == id_nota).first()
     if not nota_existente:

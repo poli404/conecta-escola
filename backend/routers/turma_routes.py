@@ -5,6 +5,7 @@ from datetime import date
 from database.schemas import TurmaCreateSchema, TurmaResponseSchema
 from database.dependencies import get_db
 from database.models import Turma, Escola, Aluno, Disciplina, AlunoTurma, TurmaDisciplina
+from routers.security import get_current_escola
 
 turma_router = APIRouter(prefix="/turma", tags=["turma"])
 
@@ -23,9 +24,10 @@ def listar_turmas(db: Session = Depends(get_db)):
 
 
 @turma_router.post("/cadastro", response_model=TurmaResponseSchema, status_code=status.HTTP_201_CREATED)
-def cadastrar_turma(turma: TurmaCreateSchema, db: Session = Depends(get_db)):
+def cadastrar_turma(turma: TurmaCreateSchema, db: Session = Depends(get_db), escola_autenticada: Escola = Depends(get_current_escola)):
     """
     Cadastra uma nova turma no sistema com os alunos associados.
+    Apenas escolas autenticadas podem cadastrar turmas.
     """
     escola = db.query(Escola).filter(Escola.id == turma.id_escola).first()
     if not escola:

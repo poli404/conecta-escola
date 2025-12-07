@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 from database.schemas import ProfessorCreateSchema, ProfessorResponseSchema
 from database.dependencies import get_db
 from database.models import Professor, Escola
-from routers.security import get_password_hash
+from routers.security import get_password_hash, get_current_escola
 
 professor_router = APIRouter(prefix="/professor", tags=["professor"])
 
@@ -20,9 +20,10 @@ def listar_professores(db: Session = Depends(get_db)):
 
 
 @professor_router.post("/cadastro", response_model=ProfessorResponseSchema, status_code=status.HTTP_201_CREATED)
-def cadastrar_professor(professor: ProfessorCreateSchema, db: Session = Depends(get_db)):
+def cadastrar_professor(professor: ProfessorCreateSchema, db: Session = Depends(get_db), escola_autenticada: Escola = Depends(get_current_escola)):
     """
     Cadastra um novo professor no sistema.
+    Apenas escolas autenticadas podem cadastrar professores.
     """
     professor.cpf = professor.cpf.replace(".", "").replace("-", "")
     professor.rg = professor.rg.replace(".", "").replace("-", "")
