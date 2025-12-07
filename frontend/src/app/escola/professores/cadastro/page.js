@@ -2,32 +2,13 @@
 import { useState } from 'react';
 import { MenuEscola } from "@/components/MenuEscola";
 import styles from "./page.module.css";
-
-async function cadastrarProfessor(dadosProfessor) {
-  const response = await fetch('http://127.0.0.1:8000/professor/cadastro', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(dadosProfessor)
-  });
-  console.log(response.status);
-
-  return response;
-}
-
-async function getDisciplinas(escola) {
-  const response = await fetch('http://localhost:8000/disciplinas', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  });
-
-  const disciplinas = response.body;
-}
+import { cadastrarProfessor } from '@/services/professorService';
+import { getTodasDisciplinasEscola } from '@/services/disciplinaService';
 
 export default function Home() {
+  const idEscola = sessionStorage.getItem('idEscola');
+  const disciplinas = getTodasDisciplinasEscola(idEscola);
+  
   const [formData, setFormData] = useState({
       nome: '',
       cpf: '',
@@ -40,7 +21,7 @@ export default function Home() {
       nascimento: '',
       telefone: '',
       email: '',
-      escola: '',
+      escola: idEscola,
       formacao: '',
       disciplinas: [],
       senha: Math.random().toString(36).slice(-20)
@@ -48,7 +29,6 @@ export default function Home() {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
-      //formData.escola = //sessionStorage.getItem('id');
       const resultado = await cadastrarProfessor(formData);
       if (resultado.status === 201) {
         alert('Professor cadastrado com sucesso!');

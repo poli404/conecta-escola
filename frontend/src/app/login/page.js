@@ -1,11 +1,9 @@
 'use client';
 import { useState } from "react";
 import styles from "./page.module.css";
+import { getEscola } from "@/services/escolaService";
 
 async function verificarUsuario(formData) {
-  /*const formData = new URLSearchParams();
-  formData.append('username', email);
-  formData.append('password', password);*/
   const response = await fetch('http://127.0.0.1:8000/login', {
         method: 'POST',
         headers: {
@@ -16,11 +14,10 @@ async function verificarUsuario(formData) {
 
   if (response.status === 200) {
     console.log('usuário reconhecido');
-    const data = await response.json();
-    //sessionStorage.setItem('access_token', data.access_token);
-    sessionStorage.setItem('idUser', data.id);
+    return true;
   } else {
     alert('Usuário ou senha incorretos!');
+    return false;
   }
 
 }
@@ -40,7 +37,14 @@ export default function Page() {
       password: e.target.password.value
     });
 
-    await verificarUsuario(formData);
+    const resp = await verificarUsuario(formData);
+    if (resp) {
+      const dominio = formData.email.substring(formData.email.indexOf('@')+1).split('.br')[0];
+      console.log(dominio);
+      const escola = await getEscola(dominio);
+
+      sessionStorage.setItem("idEscola", escola.id);
+    }
   }
 
   return (
