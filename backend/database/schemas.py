@@ -119,10 +119,11 @@ class ResponsavelCreateSchema(PessoaCreateSchema):
     emailPessoal: str
     estadoCivil: EstadoCivil
     id_aluno: Optional[str] = None  # cpf
+    id_escola: int
 
     model_config = {"from_attributes": True}
 
-class ResponsavelBaseResponse(PessoaResponseSchema):  # não associa a lista de alunos diretamente
+class ResponsavelBaseResponse(PessoaResponseSchema):
     emailPessoal: str
     estadoCivil: EstadoCivil
 
@@ -167,7 +168,7 @@ class AlunoTurmaResponseSchema(BaseModel):
 
 
 class DisciplinaCreateSchema(BaseModel):
-    descricao: str # Nome da disciplina (ex: "Matemática", "Português")
+    descricao: str  # nome da disciplina (ex: "Matemática", "Português")
     id_professor: str
 
     model_config = {"from_attributes": True}

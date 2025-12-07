@@ -146,13 +146,16 @@ class Responsavel(Pessoa):
     emailPessoal = Column("email_pessoal", String(255), nullable=False)
     estadoCivil = Column("estado_civil", Enum(EstadoCivil), nullable=False)
 
-    # relacionamento com aluno
+    # relacionamento com aluno e escola
     alunos = relationship("Aluno", back_populates="responsavel", foreign_keys="Aluno.idResponsavel")
+    idEscola = Column("id_escola", Integer, ForeignKey("escolas.id"), nullable=False)
+    escola = relationship("Escola", backref="responsaveis")
 
-    def __init__(self, nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha, emailPessoal, estadoCivil, aluno):
+    def __init__(self, nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha, emailPessoal, estadoCivil, escola, aluno=None):
         super().__init__(nome, cpf, rg, corRaca, endereco, cep, uf, dataNasc, genero, telefone, senha)
         self.emailPessoal = emailPessoal
         self.estadoCivil = estadoCivil
+        self.escola = escola
         if aluno:
             self.alunos.append(aluno)
 

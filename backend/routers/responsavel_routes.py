@@ -23,7 +23,6 @@ def listar_responsaveis(db: Session = Depends(get_db)):
 def cadastrar_responsavel(responsavel: ResponsavelCreateSchema, db: Session = Depends(get_db)):
     """
     Cadastra um novo responsável no sistema.
-    Apenas escolas autenticadas podem cadastrar responsáveis.
     """
     responsavel.cpf = responsavel.cpf.replace(".", "").replace("-", "")
     responsavel.rg = responsavel.rg.replace(".", "").replace("-", "")
@@ -34,13 +33,17 @@ def cadastrar_responsavel(responsavel: ResponsavelCreateSchema, db: Session = De
     if existente:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Responsável já cadastrado(a).")
     
+    escola = db.query(Escola).filter(Escola.id == responsavel.id_escola).first()
+    if not escola:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Escola não encontrada.")
+
     aluno = None
     if responsavel.id_aluno:
         responsavel.id_aluno = responsavel.id_aluno.replace(".", "").replace("-", "")
         aluno = db.query(Aluno).filter(Aluno.cpf == responsavel.id_aluno).first()
     
     hashed_password = get_password_hash(responsavel.senha)
-    novo_responsavel = Responsavel(**responsavel.model_dump(exclude={"senha", "id_aluno"}), senha=hashed_password, aluno=aluno)
+    novo_responsavel = Responsavel(**responsavel.model_dump(exclude={"senha", "id_aluno"}), senha=hashed_password, aluno=aluno, escola=escola)
     
     db.add(novo_responsavel)
     db.commit()
@@ -72,14 +75,12 @@ def buscar_responsavel_por_aluno(cpf: str, db: Session = Depends(get_db)):
 
 
 @responsavel_router.get("/escola/{id_escola}", response_model=list[ResponsavelResponseSchema])
-def listar_responsaveis_por_escola(id_escola: int, db: Session = Depends(get_db)):
+def listar_responsaveis_escola(id_escola: int, db: Session = Depends(get_db)):
     """
-    Lista todos os responsáveis de alunos de uma escola específica.
+    Lista todos os responsáveis vinculados diretamente à escola específica.
     """
-    responsaveis = db.query(Responsavel).join(Aluno, Responsavel.cpf == Aluno.idResponsavel).filter(
-        Aluno.idEscola == id_escola
-    ).options(joinedload(Responsavel.alunos)).distinct().all()
+    responsaveis = db.query(Responsavel).filter(Responsavel.idEscola == id_escola).options(joinedload(Responsavel.alunos)).all()
     
     if not responsaveis:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhum responsável encontrado para esta escola.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nenhum(a) responsável encontrado para esta escola.")
     return responsaveis
