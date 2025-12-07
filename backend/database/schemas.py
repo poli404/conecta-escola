@@ -240,7 +240,7 @@ class FaltaResponseSchema(BaseModel):
     id: int
     data: date
     quantidade: int
-    justificativa: bool
+    justificada: bool
     aluno: AlunoBaseResponse
     disciplina: DisciplinaResponseSchema
 
