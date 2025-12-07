@@ -2,13 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 
 from database.dependencies import get_db
-from database.models import Falta, Aluno, Disciplina, AlunoTurma, Turma
+from database.models import Falta, Aluno, Disciplina, AlunoTurma, Turma, Professor
 from database.schemas import FaltaCreateSchema, FaltaResponseSchema, FaltaUpdateSchema
+from routers.security import get_current_professor
 
 falta_router = APIRouter(prefix="/falta", tags=["falta"])
 
 @falta_router.post("/", response_model=FaltaResponseSchema, status_code=status.HTTP_201_CREATED)
-def atribuir_falta(falta: FaltaCreateSchema, db: Session = Depends(get_db)):
+def atribuir_falta(falta: FaltaCreateSchema, db: Session = Depends(get_db), professor_autenticado: Professor = Depends(get_current_professor)):
     """
     Atribui falta a um aluno em uma disciplina específica.
     """
@@ -30,7 +31,7 @@ def atribuir_falta(falta: FaltaCreateSchema, db: Session = Depends(get_db)):
     return nova_falta
 
 @falta_router.delete("/{id_falta}", status_code=status.HTTP_204_NO_CONTENT)
-def remover_falta(id_falta: int, db: Session = Depends(get_db)):
+def remover_falta(id_falta: int, db: Session = Depends(get_db), professor_autenticado: Professor = Depends(get_current_professor)):
     """
     Remove uma falta lançada incorretamente para um aluno em uma disciplina específica.
     """
@@ -44,7 +45,7 @@ def remover_falta(id_falta: int, db: Session = Depends(get_db)):
     return None
 
 @falta_router.put("/{id_falta}/justificar", response_model=FaltaResponseSchema)
-def justificar_falta(id_falta: int, dados: FaltaUpdateSchema, db: Session = Depends(get_db)):
+def justificar_falta(id_falta: int, dados: FaltaUpdateSchema, db: Session = Depends(get_db), professor_autenticado: Professor = Depends(get_current_professor)):
     """
     Permite marca ou desmarcar uma falta como justificada.
     Obs.: faltas justificadas não são consideradas para o limite de reprovação.
