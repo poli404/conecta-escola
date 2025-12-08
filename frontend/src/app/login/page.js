@@ -1,4 +1,5 @@
 'use client';
+import { getAluno } from "@/services/alunoService";
 import styles from "./page.module.css";
 import { getEscola } from "@/services/escolaService";
 
@@ -48,10 +49,16 @@ export default function Page() {
     e.preventDefault();
 
     const resp = await verificarUsuario(e.target.username.value, e.target.password.value);
+    let user;
+    let escola;
     if (resp) {
-      const dominio = e.target.username.value.substring(e.target.username.value.indexOf('@')+1).split('.br')[0];
-      const escola = 1 //await getEscola(dominio);
-      const user = await getUsuario(e.target.username.value);
+      if (!(e.target.username.value).includes('@')) {
+        user = await getAluno(e.target.username.value);
+        sessionStorage.setItem('idUsuario', user.cpf);
+      } else {
+        user = await getUsuario(e.target.username.value);
+      }
+      escola = user.id_escola;
       sessionStorage.setItem("idEscola", escola);
 
       if (user.tipo === 'escola') {
