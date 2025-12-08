@@ -51,17 +51,15 @@ export async function getAlunosResponsavel(idResponsavel) {
 
 export async function getAlunosTurma(idTurma) {
     try {
-      const resposta = await fetch(`http://localhost:8000/aluno/turma/${idTurma}`, {
+      const resposta = await fetch(`http://127.0.0.1:8000/aluno/turma/${idTurma}`, {
         method: 'GET',
-        headers: {'Content-Type' : "application/json"}
+        headers: {
+          'accept' : 'application/json',
+          'Content-Type' : "application/json"}
       });
 
-      if (resposta.status === 200) {
-        const dados = await resposta.json();
-        return dados;
-      } else {
-          alert("Alunos não encontrados!");
-      }
+      const dados = await resposta.json();
+      return dados;
     } catch (erro) {
       console.error("Erro:", erro);
       return null;
@@ -150,13 +148,14 @@ export async function getNotas(idAluno, autorizacao) {
   }
 }
 
-export async function getFaltas(idAluno) {
+export async function getFaltas(idAluno, autorizacao) {
   try {
     const response = await fetch(`http://127.0.0.1:8000/falta/aluno/${idAluno}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }
+        'accept' : 'application/json',
+        'Authorization' : `Bearer ${autorizacao}`,
+        'Content-Type' : "application/json"},
     });
 
     if (response.status === 200) {

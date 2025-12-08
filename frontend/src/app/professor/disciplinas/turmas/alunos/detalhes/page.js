@@ -20,7 +20,7 @@ export default function Home() {
         const token = sessionStorage.getItem('access_token');
 
         const notasData = await getNotas(idAluno, token);
-        const faltasData = await getFaltas(idAluno);
+        const faltasData = await getFaltas(idAluno, token);
         const alunoData = await getAluno(idAluno, token);
         setNotas(notasData);
         setFaltas(faltasData);

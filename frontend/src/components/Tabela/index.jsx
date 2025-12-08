@@ -4,6 +4,7 @@ import styles from "./tabela.module.css";
 import eye from "../../../public/eye_icon.svg";
 import lupa from "../../../public/search_icon.svg";
 import notes from "../../../public/notes_icon.svg";
+import { deletarFalta } from "@/services/faltaService";
 
 export const BarraPesquisa = ({ col }) => {
     return (
@@ -54,6 +55,18 @@ export const TabelasEscola = ({ dados, tipo }) => {
             ))}
         </tbody>
         );
+    } else if (tipo == "disciplinasTurmas") {
+        return (
+        <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.left}>{dado.id}</td>
+                <td className={styles.left}>{dado.descricao}</td>
+                <td className={styles.left}>{dado.professor.nome}</td>
+            </tr>
+            ))}
+        </tbody>
+        );
     } else if (tipo == 'responsaveis') {
         return (
         <tbody>
@@ -90,6 +103,15 @@ export const TabelasEscola = ({ dados, tipo }) => {
 }
 
 export const TabelasProfessor = ({ dados, tipo }) => {
+    const apagarFalta = (e) => {
+        e.preventDefault();
+        if (confirm('Tem certeza que deseja apagar esta falta?')) {
+            const token = sessionStorage.getItem('access_token');
+            console.log(e.target.id);
+            deletarFalta(e.target.id, token);
+        }
+    };
+
     if (tipo == 'disciplinas') {
         return (
             <tbody>
@@ -142,7 +164,7 @@ export const TabelasProfessor = ({ dados, tipo }) => {
                 <td className={styles.center}>{dado.data}</td>
                 <td className={styles.center}>{dado.valor}</td>
                 <td className={styles.center}>
-                    <Link className={styles.destaque} href={`${tipo}?id=${dado.id}`}>Alterar Nota</Link>
+                    <Link className={styles.destaque} href={`nota/alterar?idNota=${dado.id}`}>Alterar Nota</Link>
                 </td>
             </tr>
             ))}
@@ -154,9 +176,7 @@ export const TabelasProfessor = ({ dados, tipo }) => {
             {dados.map((dado) => (
             <tr key={dado.id}>
                 <td className={styles.center}>{dado.data}</td>
-                <td className={`${styles.center} ${styles.destaque}`}>
-                    <Link href="" className={styles.excluir}>Excluir</Link>
-                </td>
+                <td id={dado.id} onClick={apagarFalta} className={`${styles.center} ${styles.destaque} ${styles.excluir}`}>Excluir</td>
             </tr>
             ))}
         </tbody>
