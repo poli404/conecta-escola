@@ -183,3 +183,29 @@ export const TabelasProfessor = ({ dados, tipo }) => {
         );
     }
 }
+
+export const TabelasExterno = ({ dados, tipo }) => {
+    if (tipo == 'notas'){
+        return(
+            <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.center}>{dado.data}</td>
+                <td className={styles.center}>{dado.valor}</td>
+            </tr>
+            ))}
+        </tbody>
+        );
+    } else if (tipo == 'faltas'){
+        return(
+            <tbody>
+            {dados.map((dado) => (
+            <tr key={dado.id}>
+                <td className={styles.center}>{dado.data}</td>
+                <td className={styles.center}>{dado.quantidade}</td>
+            </tr>
+            ))}
+        </tbody>
+        );
+    }
+}

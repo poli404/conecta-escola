@@ -18,6 +18,7 @@ class UsuarioInfo(BaseModel):
     id: int | str  # int para escola, str (cpf) para professor/responsavel
     email: str
     nome: str | None = None
+    id_escola: str | int
 
 @login_router.post("/", response_model=Token)
 async def login_usuarios(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
@@ -62,7 +63,8 @@ async def get_usuario_por_email(email: str, db: Session = Depends(get_db)):
             "tipo": "escola",
             "id": user.id,
             "email": user.email,
-            "nome": user.nome
+            "nome": user.nome,
+            "id_escola" : user.id
         }
     
     user = db.query(Professor).filter(Professor.emailEscolar == email).first()
@@ -71,7 +73,8 @@ async def get_usuario_por_email(email: str, db: Session = Depends(get_db)):
             "tipo": "professor",
             "id": user.cpf,
             "email": user.emailEscolar,
-            "nome": user.nome
+            "nome": user.nome,
+            "id_escola" : user.escola
         }
     
     user = db.query(Responsavel).filter(Responsavel.emailPessoal == email).first()
@@ -80,7 +83,8 @@ async def get_usuario_por_email(email: str, db: Session = Depends(get_db)):
             "tipo": "responsavel",
             "id": user.cpf,
             "email": user.emailPessoal,
-            "nome": user.nome
+            "nome": user.nome,
+            "id_escola" : user.escola
         }
     
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuário não encontrado")

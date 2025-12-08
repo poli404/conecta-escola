@@ -9,15 +9,11 @@ export const MenuResponsavel = ({ alunos }) => {
 
   return (
     <nav className={styles.menu}>
-      <div className={styles.alunos}>
-        {alunos.map(e => (<a key={e.cpf} href={`?idAluno=${e.cpf}`} className={styles.menuItem}>{e.nome}</a>))}
-      </div>
       <div className={styles.itens}>
         <a className={styles.menuItem} href="/responsavel">
           <Image src={home} width="20" alt="Tela Inicial"></Image>
         </a>
-        <a href={"/responsavel/notas?idAluno="+searchParams.get("idAluno")} className={styles.menuItem}>Notas</a>
-        <a href={"/responsavel/faltas?idAluno="+searchParams.get("idAluno")} className={styles.menuItem}>Faltas</a>
+        {alunos.map(e => (<a key={e.cpf} href={`/responsavel/aluno?idAluno=${e.cpf}`} className={styles.menuItem}>{e.nome}</a>))}
       </div>
     </nav>
     );
