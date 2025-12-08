@@ -25,7 +25,7 @@ export default function Home() {
     if (resultado.status === 201) {
       alert("Nota cadastrada com sucesso!");
     } else {
-      alert("Erro ao cadastrar disciplina!");
+      alert("Erro ao cadastrar nota!");
     }
   };
 

@@ -10,8 +10,11 @@ export async function cadastrarFalta(formData, autorizacao) {
     });
 
     const dados = await resposta.json();
-    console.log(dados);
-    return dados;
+
+    if (dados.status === 201) {
+      console.log(dados);
+      return dados;
+    }
   } catch (erro) {
     console.error("Erro:", erro);
     return null;
@@ -20,17 +23,17 @@ export async function cadastrarFalta(formData, autorizacao) {
 
 export async function deletarFalta(idFalta, autorizacao) {
     try {
-    const resposta = await fetch(`http://localhost:8000/falta/${idFalta}`, {
+    const resposta = await fetch(`http://127.0.0.1:8000/falta/${idFalta}`, {
       method: 'DELETE',
       headers: {
-        'accept' : 'application/json',
+        'accept' : '*/*',
         'Authorization' : `Bearer ${autorizacao}`,
         'Content-Type' : "application/json"},
     });
 
-    const dados = await resposta.json();
-    console.log(dados);
-    return dados;
+    if (resposta.status === 204) {
+      return resposta;
+    }
   } catch (erro) {
     console.error("Erro:", erro);
     return null;

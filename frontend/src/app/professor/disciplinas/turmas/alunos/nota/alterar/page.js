@@ -1,37 +1,34 @@
 'use client';
-import { useState } from 'react';
-import { MenuEscola } from "@/components/MenuEscola";
-import styles from "./page.module.css";
-import { getNota } from '@/services/alunoServiceService';
-import { SearchParamsContext } from 'next/dist/shared/lib/hooks-client-context.shared-runtime';
+
+import { alterarNota, getNota } from '@/services/notaService';
 import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
     const searchParams = useSearchParams();
-    const idNota = searchParams.get('idNota');    
-      data: nota.data
-    };
+    const idNota = searchParams.get('idNota');
+    const [nota, setNota] = useState();
 
     useEffect(() => {
     (async () => {
         try {
-
-        const nota = await getNota(idNota);
+        const notaData = await getNota(idNota);
         setNota(notaData);
         } catch (err) {
-        console.error("Erro ao alterar nota:", err);
+        console.error("Erro ao recupear nota:", err);
         setNota([]);
         }
     })();
     }, []);
+    
+    const [formData, setFormData] = useState({
+      valor: nota.valor,
+    });
   
     const handleSubmit = async (e) => {
       e.preventDefault();
-        const token = sessionStorage.getItem('access_token');
-      const idNota = sessionStorage.getItem('idNota');
-      formData.idNota = idNota;
-      const resultado = await alterarNota(formData, token);
-      alert(`Senha alterada com sucesso!`);
+      const token = sessionStorage.getItem('access_token');
+      const resultado = await alterarNota(idNota, formData, token);
     };
 
     const handleChange = (e) => {
@@ -48,8 +45,6 @@ export default function Home() {
         <h1>Alterar Nota</h1>
         <form className={styles.forms} onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="data">Data:</label>
-            <input className={styles.field} type="date" id="data" name="data" value={formData.data} onChange={handleChange} required/>  
             <label htmlFor="valor">Nota:</label>
             <input className={styles.field} type="number" id="valor" name="valor" placeholder="6.0" value={formData.valor} onChange={handleChange} required/>
           </div>
@@ -58,4 +53,4 @@ export default function Home() {
       </div>
     </main>
   );
-
+}

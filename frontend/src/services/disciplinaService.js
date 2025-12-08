@@ -45,8 +45,9 @@ export async function getDisciplinasTurma(idTurma) {
       headers: {'Content-Type' : "application/json"}
     });
 
+    const dados = await resposta.json();
+    console.log(dados);
     if (resposta.status == 200) {
-      const dados = await resposta.json();
       return dados;
     } else {
       return null;
